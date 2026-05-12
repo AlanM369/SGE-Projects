@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SGE.Aplicacion/SGE.Aplicacion.csproj" />
+  <Project Path="SGE.Consola/SGE.Consola.csproj" />
+  <Project Path="SGE.Dominio/SGE.Dominio.csproj" />
+  <Project Path="SGE.Infraestructura/SGE.Infraestructura.csproj" />
+</Solution>
