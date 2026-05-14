@@ -7,41 +7,73 @@ public class Tramite
     // Las propiedades usan private set para garantizar el encapsulamiento.
     // Nadie desde afuera de esta clase puede modificar estos valores directamente.
     public Guid Id { get; private set; }
-    public Guid ExpedienteId { get; private set; }
-    public EtiquetaTramite Etiqueta { get; private set; }
-    public ContenidoTramite? Contenido { get; private set; }
+    public Guid ExpedienteId { get; private set; } // El ID del expediente al que pertenece el trámite.
+    public EtiquetaTramite Etiqueta { get; private set; } // Enumerativo
+    public ContenidoTramite? Contenido { get; private set; } // ValueObject, permite que si existe, no sea nulo.
     public DateTime FechaCreacion { get; private set; }
     public DateTime FechaUltimaModificacion { get; private set; }
     public Guid UsuarioUltimoCambio { get; private set; }
 
-    // Constructor natural: Se usa cuando el usuario crea un expediente desde cero.
-    public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioCreador)
+    // Constructor privado: Centraliza toda la lógica de construcción.
+    // Es utilizado tanto por el constructor público como por el Factory Method.
+    private Tramite(
+        Guid id,
+        Guid expedienteId,
+        EtiquetaTramite etiqueta,
+        ContenidoTramite contenido,
+        DateTime fechaCreacion,
+        DateTime fechaUltimaModificacion,
+        Guid usuarioUltimoCambio)
     {
-        Id = Guid.NewGuid(); // La entidad genera su propio ID.
+        Id = id;
         ExpedienteId = expedienteId;
         Etiqueta = etiqueta;
         Contenido = contenido;
-        FechaCreacion = DateTime.Now;
-        FechaUltimaModificacion = FechaCreacion;
-        UsuarioUltimoCambio = usuarioCreador;
+        FechaCreacion = fechaCreacion;
+        FechaUltimaModificacion = fechaUltimaModificacion;
+        UsuarioUltimoCambio = usuarioUltimoCambio;
     }
 
-    // Constructor privado: Necesario para que el Factory Method pueda instanciar la clase sin pasar por las validaciones del alta.
-    private Tramite() { }
 
-    // Factory Method: Usado por la capa de Infraestructura para reconstruir el objeto cuando lea el archivo .txt.
-    public static Tramite Reconstruir(Guid id, Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, DateTime fechaCreacion, DateTime fechaModificacion, Guid usuario)
+    // Constructor público: Se usa cuando el usuario crea un trámite nuevo.
+    // Genera automáticamente el ID y las fechas iniciales.
+    public Tramite(
+        Guid expedienteId,
+        EtiquetaTramite etiqueta,
+        ContenidoTramite contenido,
+        Guid usuarioCreador)
+        : this(
+            Guid.NewGuid(), // Genera un ID nuevo para el trámite.
+            expedienteId, // El ID del expediente al que pertenece el trámite.
+            etiqueta,
+            contenido,
+            DateTime.Now,
+            DateTime.Now,
+            usuarioCreador)
     {
-        return new Tramite
-        {
-            Id = id,
-            ExpedienteId = expedienteId,
-            Etiqueta = etiqueta,
-            Contenido = contenido,
-            FechaCreacion = fechaCreacion,
-            FechaUltimaModificacion = fechaModificacion,
-            UsuarioUltimoCambio = usuario
-        };
+    }
+
+
+    // Factory Method: Usado por la capa de Infraestructura para reconstruir
+    // el objeto cuando se lee desde el archivo .txt.
+    // No genera nuevos datos, sino que reutiliza los persistidos.
+    public static Tramite Reconstruir(
+        Guid id,
+        Guid expedienteId,
+        EtiquetaTramite etiqueta,
+        ContenidoTramite contenido,
+        DateTime fechaCreacion,
+        DateTime fechaModificacion,
+        Guid usuario)
+    {
+        return new Tramite(
+            id,
+            expedienteId,
+            etiqueta,
+            contenido,
+            fechaCreacion,
+            fechaModificacion,
+            usuario);
     }
 
     // Método para alterar el trámite asegurando que se respeten las reglas de negocio.
