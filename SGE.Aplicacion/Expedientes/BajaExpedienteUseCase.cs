@@ -6,39 +6,41 @@ namespace SGE.Aplicacion.Expedientes;
 
 public class BajaExpedienteUseCase
 {
-    private readonly IExpedienteRepository _expedienteRepo;
-    private readonly ITramiteRepository _tramiteRepo;
-    private readonly IAutorizacionService _auth;
+    private readonly IExpedienteRepository _expedienteRepositorio;
+    private readonly ITramiteRepository _tramiteRepositorio; // Necesitamos este para borrar los trámites
+    private readonly IAutorizacionService _autorizacion;
 
     // Inyectamos ambos repositorios
-    public BajaExpedienteUseCase(IExpedienteRepository expedienteRepo, ITramiteRepository tramiteRepo, IAutorizacionService auth)
+    public BajaExpedienteUseCase(IExpedienteRepository expedienteRepositorio, ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion)
     {
-        _expedienteRepo = expedienteRepo;
-        _tramiteRepo = tramiteRepo;
-        _auth = auth;
+        _expedienteRepositorio = expedienteRepositorio;
+        _tramiteRepositorio = tramiteRepositorio;
+        _autorizacion = autorizacion;
     }
 
     public void Ejecutar(BajaExpedienteRequest request)
-    {
-        if (!_auth.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteBaja))
+    {   
+        // 1. Verificamos permisos
+        if (!_autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteBaja))
         {
             throw new AutorizacionException("El usuario no tiene permisos para eliminar expedientes.");
         }
-
-        var expediente = _expedienteRepo.ObtenerPorId(request.ExpedienteId);
+        // 2. Verificamos que el expediente exista 
+        var expediente = _expedienteRepositorio.ObtenerPorId(request.ExpedienteId);
         if (expediente == null)
         {
             throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
         }
 
-        // 1. Buscamos y eliminamos primero todos los trámites asociados
-        var tramitesAsociados = _tramiteRepo.ObtenerPorExpedienteId(request.ExpedienteId);
+        // 3. Orquestación de la Baja en Cascada
+        // 1. Buscamos y eliminamos uno por uno todos los trámites asociados al expediente
+        var tramitesAsociados = _tramiteRepositorio.ObtenerPorExpedienteId(request.ExpedienteId);
         foreach (var tramite in tramitesAsociados)
         {
-            _tramiteRepo.Eliminar(tramite.Id);
+            _tramiteRepositorio.Eliminar(tramite.Id);
         }
 
-        // 2. Finalmente, eliminamos el expediente
-        _expedienteRepo.Eliminar(request.ExpedienteId);
+        // 4. Finalmente, borramos el expediente
+        _expedienteRepositorio.Eliminar(request.ExpedienteId);
     }
 }
