@@ -1,6 +1,6 @@
 using SGE.Dominio.Comun;
 
-namespace SGE.Aplicacion.Excepciones;
+namespace SGE.Aplicacion.Comun;
 
 // Heredamos de la clase base Exception de .NET
 public class RepositorioException : Exception

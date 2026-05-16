@@ -1,5 +1,3 @@
-using SGE.Aplicacion.Interfaces;
-
 namespace SGE.Aplicacion.Tramites;
 
 public class ListarTramitesPorExpedienteUseCase(ITramiteRepository tramiteRepositorio)

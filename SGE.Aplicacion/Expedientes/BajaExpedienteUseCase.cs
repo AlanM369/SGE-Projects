@@ -1,6 +1,6 @@
 using SGE.Aplicacion.Autorizacion;
-using SGE.Aplicacion.Excepciones;
-using SGE.Aplicacion.Interfaces;
+using SGE.Aplicacion.Comun;
+using SGE.Aplicacion.Tramites;
 
 namespace SGE.Aplicacion.Expedientes;
 

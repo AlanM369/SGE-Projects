@@ -1,6 +1,5 @@
 using SGE.Aplicacion.Autorizacion;// Para el Enum Permiso
-using SGE.Aplicacion.Excepciones; // Para nuestra AutorizacionException
-using SGE.Aplicacion.Interfaces; // Para los contratos
+using SGE.Aplicacion.Comun; // Para nuestra AutorizacionException
 using SGE.Dominio.Expedientes; // Para las entidades
 
 namespace SGE.Aplicacion.Expedientes;

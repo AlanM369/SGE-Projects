@@ -1,5 +1,5 @@
-using SGE.Aplicacion.Excepciones;
-using SGE.Aplicacion.Interfaces;
+using SGE.Aplicacion.Comun;
+using SGE.Aplicacion.Tramites;
 using SGE.Dominio.Tramites;
 
 namespace SGE.Aplicacion.Expedientes;

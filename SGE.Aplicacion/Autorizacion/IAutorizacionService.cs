@@ -1,6 +1,6 @@
 using SGE.Aplicacion.Autorizacion;
 
-namespace SGE.Aplicacion.Interfaces;
+namespace SGE.Aplicacion.Autorizacion;
 
 // Este contrato nos va a permitir preguntar si un usuario puede hacer una acción,
 // aislando la lógica de seguridad del Caso de Uso.

@@ -1,6 +1,5 @@
-using SGE.Aplicacion.Interfaces;
 using SGE.Dominio.Expedientes;
-using SGE.Aplicacion.Tramites; // Para usar el ExpedienteDetalleDTO
+using SGE.Aplicacion.Tramites;
 
 namespace SGE.Aplicacion.Expedientes;
 
