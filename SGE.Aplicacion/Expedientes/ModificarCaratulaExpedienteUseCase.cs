@@ -5,27 +5,18 @@ using SGE.Dominio.Expedientes;
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class ModificarCaratulaExpedienteUseCase
+public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
 {
-    private readonly IExpedienteRepository _repositorio;
-    private readonly IAutorizacionService _autorizacion;
-
-    public ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
-    {
-        _repositorio = repositorio;
-        _autorizacion = autorizacion;
-    }
-
     public void Ejecutar(ModificarCaratulaRequest request)
     {   
         // 1. Se realiza el cheque de autorización
-        if (!_autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
+        if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
         {
             throw new AutorizacionException("El usuario no tiene permisos para modificar expedientes.");
         }
 
         // 2. Búsqueda y control de nulos (Acá usamos nuestra excepción personalizada)
-        var expediente = _repositorio.ObtenerPorId(request.ExpedienteId);
+        var expediente = repositorio.ObtenerPorId(request.ExpedienteId);
         if (expediente == null)
         {
             throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
@@ -36,6 +27,6 @@ public class ModificarCaratulaExpedienteUseCase
         expediente.ModificarCaratula(nuevaCaratulaVO, request.IdUsuario);
 
         // 4. Persistencia: Guardamos el estado modificado
-        _repositorio.Modificar(expediente);
+        repositorio.Modificar(expediente);
     }
 }

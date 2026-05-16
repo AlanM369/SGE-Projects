@@ -6,33 +6,17 @@ using SGE.Dominio.Tramites;
 
 namespace SGE.Aplicacion.Tramites;
 
-public class ModificarTramiteUseCase
+public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
 {
-    private readonly ITramiteRepository _tramiteRepositorio;
-    private readonly IAutorizacionService _autorizacion;
-    private readonly ActualizacionEstadoExpedienteService _actualizadorEstado;
-
-    public ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
-    {
-        _tramiteRepositorio = tramiteRepositorio;
-        _autorizacion = autorizacion;
-        _actualizadorEstado = actualizadorEstado;
-    }
-
     public void Ejecutar(ModificarTramiteRequest request)
     {
          // 1. Verificamos la autorización del usuario
-        if (!_autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.TramiteModificacion))
-        {
+        if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.TramiteModificacion))
             throw new AutorizacionException("El usuario no tiene permisos para modificar trámites.");
-        }
 
         // 2. Validar que el tramite exista
-        var tramite = _tramiteRepositorio.ObtenerPorId(request.TramiteId);
-        if (tramite == null)
-        {
-            throw new EntidadNoEncontradaException($"No se encontró el trámite con ID {request.TramiteId}");
-        }
+        var tramite = tramiteRepositorio.ObtenerPorId(request.TramiteId)
+            ?? throw new EntidadNoEncontradaException($"No se encontró el trámite con ID {request.TramiteId}");
 
         // 3. Dominio: Instanciamos el nuevo Value Object de contenido y modificamos
         var nuevoContenidoVO = new ContenidoTramite(request.NuevoContenido);
@@ -41,10 +25,10 @@ public class ModificarTramiteUseCase
         tramite.ModificarTramite(request.NuevaEtiqueta, nuevoContenidoVO, request.IdUsuario);
         
         // 4. Persistencia
-        _tramiteRepositorio.Modificar(tramite);
+        tramiteRepositorio.Modificar(tramite);
  
         // 5. Orquestación: Forzamos la revisión del estado del expediente 
         // (por si el usuario cambió una etiqueta "PaseAEstudio" por una de "Resolucion")
-        _actualizadorEstado.Actualizar(tramite.ExpedienteId, request.IdUsuario);
+        actualizadorEstado.Actualizar(tramite.ExpedienteId, request.IdUsuario);
     }
 }

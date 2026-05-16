@@ -5,27 +5,14 @@ using SGE.Dominio.Expedientes; // Para las entidades
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class AgregarExpedienteUseCase
+public class AgregarExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
 {   
-    // Usamos readonly para asegurar que estas dependencias no se modifiquen a mitad del proceso
-    private readonly IExpedienteRepository _repositorio;
-    private readonly IAutorizacionService _autorizacion;
-
-    // INYECCIÓN DE DEPENDENCIAS
-    public AgregarExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
-    {
-        _repositorio = repositorio;
-        _autorizacion = autorizacion;
-    }
-
     // El método Ejecutar recibe el DTO de entrada y devuelve el DTO de salida
     public AgregarExpedienteResponse Ejecutar(AgregarExpedienteRequest request)
     {
         // 1. Verificamos permisos
-        if (!_autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteAlta))
-        {
+        if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteAlta))
             throw new AutorizacionException("El usuario no tiene permisos para crear expedientes.");
-        }
 
         // 2. Interacción con el Dominio 
         // Instanciamos el Value Object (validará que la carátula sea correcta) y la Entidad
@@ -34,7 +21,7 @@ public class AgregarExpedienteUseCase
 
         // 3. Persistencia
         // Le pasamos la entidad al repositorio para que la guarde
-        _repositorio.Agregar(nuevoExpediente);
+        repositorio.Agregar(nuevoExpediente);
 
         // 4. Retornamos la respuesta
         // Empaquetamos el resultado en un DTO y se lo mandamos a la capa que nos llamó (que seria la Consola, aunque no lo sabe)

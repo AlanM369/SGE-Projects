@@ -4,21 +4,13 @@ using SGE.Aplicacion.Tramites; // Para usar el ExpedienteDetalleDTO
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class ListarExpedientesUseCase
+public class ListarExpedientesUseCase(IExpedienteRepository repositorio)
 {
-    private readonly IExpedienteRepository _repositorio;
-
-    // Solo inyectamos el repositorio
-    public ListarExpedientesUseCase(IExpedienteRepository repositorio)
-    {
-        _repositorio = repositorio;
-    }
-
     // El método devuelve un IEnumerable (una secuencia) de DTOs, no de Entidades
     public IEnumerable<ExpedienteDetalleDTOs> Ejecutar()
     {   
         // 1. Obtenemos TODAS las entidades crudas desde la infraestructura
-        var expedientes = _repositorio.ObtenerTodos();
+        var expedientes = repositorio.ObtenerTodos();
         // Creamos una lista vacía para guardar nuestros DTOs
         var listaDinamica = new List<ExpedienteDetalleDTOs>();
         // 2. Proceso de Mapeo
