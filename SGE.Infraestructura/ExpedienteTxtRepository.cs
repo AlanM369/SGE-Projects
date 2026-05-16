@@ -24,32 +24,32 @@ public class ExpedienteTxtRepository : IExpedienteRepository
 
     // Busca un expediente por su id. Lee todos los expedientes del archivo y devuelve el que coincide con el id, o null si no se encuentra.
     public Expediente? ObtenerPorId(Guid id)
-{
-    if (!File.Exists(_nombreArchivo)) return null;
-
-    using var sr = new StreamReader(_nombreArchivo);
-    while (!sr.EndOfStream)
     {
-        var idStr        = sr.ReadLine() ?? "";
-        var caratulaStr  = sr.ReadLine() ?? "";
-        var fechaCreStr  = sr.ReadLine() ?? "";
-        var fechaModStr  = sr.ReadLine() ?? "";
-        var usuarioStr   = sr.ReadLine() ?? "";
-        var estadoStr    = sr.ReadLine() ?? "";
+        if (!File.Exists(_nombreArchivo)) return null;
 
-        var expedienteId = Guid.Parse(idStr);
+            using var sr = new StreamReader(_nombreArchivo);
+            while (!sr.EndOfStream)
+            {
+                var idStr        = sr.ReadLine() ?? "";
+                var caratulaStr  = sr.ReadLine() ?? "";
+                var fechaCreStr  = sr.ReadLine() ?? "";
+                var fechaModStr  = sr.ReadLine() ?? "";
+                var usuarioStr   = sr.ReadLine() ?? "";
+                var estadoStr    = sr.ReadLine() ?? "";
 
-        // Si el Id coincide, reconstruye y devuelve ese expediente
-        if (expedienteId == id)
-        {
-            return Expediente.Reconstruir(
-                expedienteId,
-                new Caratula(caratulaStr),
-                DateTime.Parse(fechaCreStr),
-                DateTime.Parse(fechaModStr),
-                Guid.Parse(usuarioStr),
-                Enum.Parse<EstadoExpediente>(estadoStr));
-        }
+                var expedienteId = Guid.Parse(idStr);
+
+                // Si el Id coincide, reconstruye y devuelve ese expediente
+                if (expedienteId == id)
+                {
+                    return Expediente.Reconstruir(
+                        expedienteId,
+                        new Caratula(caratulaStr),
+                        DateTime.Parse(fechaCreStr),
+                        DateTime.Parse(fechaModStr),
+                        Guid.Parse(usuarioStr),
+                        Enum.Parse<EstadoExpediente>(estadoStr));
+                }
     }
 
     // Si recorrió todo el archivo y no lo encontró, devuelve null
@@ -90,30 +90,34 @@ public class ExpedienteTxtRepository : IExpedienteRepository
         return resultado;
     }
 
+    // Modifica un expediente existente. Lee todos los expedientes, busca el que coincide por id, lo reemplaza y reescribe todo el archivo.
     public void Modificar(Expediente expediente)
     {
-        var todos = ObtenerTodos().ToList();
-        var indice = todos.FindIndex(e => e.Id == expediente.Id);
+        var todos = ObtenerTodos().ToList(); // Leemos todos los expedientes del archivo a memoria para poder modificar.
+        var indice = todos.FindIndex(e => e.Id == expediente.Id); // Buscamos el índice del expediente a modificar en la lista completa
 
+        // Si no lo encuentra, lanzamos una excepción.
         if (indice == -1)
             throw new RepositorioException($"No se encontró el expediente con Id {expediente.Id} para modificar.");
 
-        todos[indice] = expediente;
-        ReescribirArchivo(todos);
+        todos[indice] = expediente; // Reemplazamos el expediente viejo por el expediente nuevo.
+        ReescribirArchivo(todos); // Reescribimos el archivo completo con la lista modificada. 
     }
 
+    // Elimina un expediente por su id. Lee todos los expedientes, elimina el que coincide por id, y reescribe todo el archivo.
     public void Eliminar(Guid id)
     {
-        var todos = ObtenerTodos().ToList();
-        var cantidad = todos.RemoveAll(e => e.Id == id);
+        var todos = ObtenerTodos().ToList();  // Leemos todos los expedientes del archivo a memoria para poder modificar.
+        var cantidad = todos.RemoveAll(e => e.Id == id); // Buscamos el índice del expediente a modificar en la lista completa
 
+        // Si no se encuentra, lanzamos una excepción.
         if (cantidad == 0)
             throw new RepositorioException($"No se encontró el expediente con Id {id} para eliminar.");
 
-        ReescribirArchivo(todos);
+        ReescribirArchivo(todos); // Reescribimos el archivo completo con la lista modificada. 
     }
 
-    // Lee todo, modifica en memoria y reescribe el archivo completo
+    // Reescribe el archivo completo con la nuevo archivo modificado.
     private void ReescribirArchivo(List<Expediente> expedientes)
     {
         using var sw = new StreamWriter(_nombreArchivo, false);
