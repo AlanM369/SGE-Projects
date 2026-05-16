@@ -1,36 +1,34 @@
 using SGE.Aplicacion.Autorizacion;
-using SGE.Aplicacion.Interfaces;
 using SGE.Dominio.Expedientes;
 
 namespace SGE.Aplicacion.Expedientes;
 
 public class AgregarExpedienteUseCase
 {
-    private readonly IExpedienteRepository _repo;
-    private readonly IAutorizacionService _auth;
+    private readonly IExpedienteRepository _expedienteRepository;
+    private readonly IAutorizacionService _autorizacionService;
 
-    public AgregarExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth)
+    public AgregarExpedienteUseCase(IExpedienteRepository expedienteRepository, IAutorizacionService autorizacionService)
     {
-        _repo = repo;
-        _auth = auth;
+        _expedienteRepository = expedienteRepository;
+        _autorizacionService = autorizacionService;
     }
 
     public AgregarExpedienteResponse Ejecutar(AgregarExpedienteRequest request)
     {
-        // 1. Verificamos permisos
-        if (!_auth.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteAlta))
-        {
-            throw new AutorizacionException("El usuario no tiene permisos para crear expedientes.");
-        }
+        if (!_autorizacionService.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteAlta))
+            throw new AutorizacionException("El usuario no tiene permiso para crear expedientes.");
 
-        // 2. Instanciamos el Value Object (validará que la carátula sea correcta) y la Entidad
-        var caratulaVO = new Caratula(request.Caratula);
-        var nuevoExpediente = new Expediente(caratulaVO, request.IdUsuario);
+        // El Value Object Caratula valida internamente. Si falla, lanza DominioException.
+        var caratula = new Caratula(request.Caratula);
+        var expediente = new Expediente(caratula, request.IdUsuario);
 
-        // 3. Persistimos
-        _repo.Agregar(nuevoExpediente);
+        _expedienteRepository.Agregar(expediente);
 
-        // 4. Retornamos la respuesta
-        return new AgregarExpedienteResponse(nuevoExpediente.Id);
+        return new AgregarExpedienteResponse(
+            expediente.Id,
+            expediente.Caratula!.Texto,
+            expediente.Estado.ToString(),
+            expediente.FechaCreacion);
     }
 }

@@ -1,36 +1,39 @@
 using SGE.Aplicacion.Autorizacion;
-using SGE.Aplicacion.Excepciones;
-using SGE.Aplicacion.Interfaces;
+using SGE.Aplicacion.Comun;
 
 namespace SGE.Aplicacion.Expedientes;
 
 public class CambiarEstadoExpedienteUseCase
 {
-    private readonly IExpedienteRepository _repo;
-    private readonly IAutorizacionService _auth;
+    private readonly IExpedienteRepository _expedienteRepository;
+    private readonly IAutorizacionService _autorizacionService;
 
-    public CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth)
+    public CambiarEstadoExpedienteUseCase(IExpedienteRepository expedienteRepository, IAutorizacionService autorizacionService)
     {
-        _repo = repo;
-        _auth = auth;
+        _expedienteRepository = expedienteRepository;
+        _autorizacionService = autorizacionService;
     }
 
-    public void Ejecutar(CambiarEstadoRequest request)
+    //Recibe el id del expediente, el nuevo estado y el id del usuario
+    //Devuelve DTO con el resultado
+    public CambiarEstadoExpedienteResponse Ejecutar(CambiarEstadoExpedienteRequest request)
     {
-        if (!_auth.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
-        {
-            throw new AutorizacionException("El usuario no tiene permisos para modificar el estado.");
-        }
+        //Chequea autorización
+        if (!_autorizacionService.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
+            throw new AutorizacionException("El usuario no tiene permiso para modificar el estado del expediente.");
 
-        var expediente = _repo.ObtenerPorId(request.ExpedienteId);
-        if (expediente == null)
-        {
-            throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
-        }
+        //Busca expediente
+        //Si no encuenta devuelve null y lanza excepción
+        var expediente = _expedienteRepository.ObtenerPorId(request.IdExpediente)
+            ?? throw new EntidadNoEncontradaException($"No se encontró el expediente con Id {request.IdExpediente}.");
 
-        // Modificamos el estado a través de la entidad
+        //La entidad aplica el cambio
         expediente.CambiarEstado(request.NuevoEstado, request.IdUsuario);
 
-        _repo.Modificar(expediente);
+        //Se reemplazan los datos viejos en el .txt
+        _expedienteRepository.Modificar(expediente);
+
+        //Devuelve el id y el nuevo estado
+        return new CambiarEstadoExpedienteResponse(expediente.Id, expediente.Estado.ToString());
     }
 }
