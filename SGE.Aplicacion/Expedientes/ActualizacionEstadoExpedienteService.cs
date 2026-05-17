@@ -1,29 +1,20 @@
-using SGE.Aplicacion.Excepciones;
-using SGE.Aplicacion.Interfaces;
+using SGE.Aplicacion.Comun;
+using SGE.Aplicacion.Tramites;
 using SGE.Dominio.Tramites;
 
 namespace SGE.Aplicacion.Expedientes;
 
 // Esta clase centraliza la lógica de orquestación para actualizar el estado
-public class ActualizacionEstadoExpedienteService
+public class ActualizacionEstadoExpedienteService(IExpedienteRepository expedienteRepositorio, ITramiteRepository tramiteRepositorio)
 {
-    private readonly IExpedienteRepository _expedienteRepositorio;
-    private readonly ITramiteRepository _tramiteRepositorio;
-
-    public ActualizacionEstadoExpedienteService(IExpedienteRepository expedienteRepositorio, ITramiteRepository tramiteRepositorio)
-    {
-        _expedienteRepositorio = expedienteRepositorio;
-        _tramiteRepositorio = tramiteRepositorio;
-    }
-
     public void Actualizar(Guid expedienteId, Guid idUsuario)
     {
         // Buscamos el expediente
-        var expediente = _expedienteRepositorio.ObtenerPorId(expedienteId)
+        var expediente = expedienteRepositorio.ObtenerPorId(expedienteId)
             ?? throw new EntidadNoEncontradaException("Expediente no encontrado");
 
         // Buscamos todos los trámites de este expediente
-        var tramites = _tramiteRepositorio.ObtenerPorExpedienteId(expedienteId);
+        var tramites = tramiteRepositorio.ObtenerPorExpedienteId(expedienteId);
         
         // Buscamos el último trámite ingresado ordenando por fecha
         // (FirstOrDefault devuelve el primero de la lista, o null si la lista está vacía)
@@ -37,8 +28,6 @@ public class ActualizacionEstadoExpedienteService
 
         // Solo vamos al repositorio a guardar si el dominio nos confirmó que hubo un cambio real
         if (cambio)
-        {
-            _expedienteRepositorio.Modificar(expediente);
-        }
+            expedienteRepositorio.Modificar(expediente);
     }
 }

@@ -1,36 +1,22 @@
 using SGE.Aplicacion.Autorizacion;
-using SGE.Aplicacion.Excepciones;
-using SGE.Aplicacion.Interfaces;
+using SGE.Aplicacion.Comun;
+
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class CambiarEstadoExpedienteUseCase
+public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
 {
-    private readonly IExpedienteRepository _repositorio;
-    private readonly IAutorizacionService _autorizacion;
-
-    public CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth)
-    {
-        _repositorio = repo;
-        _autorizacion = auth;
-    }
-
     public void Ejecutar(CambiarEstadoRequest request)
     {
-        if (!_autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
-        {
+        if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
             throw new AutorizacionException("El usuario no tiene permisos para modificar el estado.");
-        }
 
-        var expediente = _repositorio.ObtenerPorId(request.ExpedienteId);
-        if (expediente == null)
-        {
-            throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
-        }
-
+        var expediente = repositorio.ObtenerPorId(request.ExpedienteId)
+            ?? throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
+        
         // Modificamos el estado a través de la entidad
         expediente.CambiarEstado(request.NuevoEstado, request.IdUsuario);
 
-        _repositorio.Modificar(expediente);
+        repositorio.Modificar(expediente);
     }
 }
