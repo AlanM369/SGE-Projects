@@ -113,6 +113,7 @@ try
     agregarExpediente.Ejecutar(request);
 }
 catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
 catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
@@ -123,7 +124,7 @@ try
     cambiarEstado.Ejecutar(request);
 }
 catch (EntidadNoEncontradaException ex) { Console.WriteLine($"[EntidadNoEncontradaException]: {ex.Message}\n"); }
-
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
 
 Console.WriteLine("=== 8. Verificar AutorizacionException (cambiar AutorizacionProvisionalService a false) ===");
 // Para probar esto: ir a AutorizacionProvisionalService y cambiar return true por return false.
