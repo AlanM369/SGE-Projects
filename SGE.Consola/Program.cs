@@ -126,10 +126,14 @@ try
 catch (EntidadNoEncontradaException ex) { Console.WriteLine($"[EntidadNoEncontradaException]: {ex.Message}\n"); }
 catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
 
-Console.WriteLine("=== 8. Verificar AutorizacionException (cambiar AutorizacionProvisionalService a false) ===");
-// Para probar esto: ir a AutorizacionProvisionalService y cambiar return true por return false.
-// Todos los casos de uso de mutación deben lanzar AutorizacionException.
-Console.WriteLine("[Instrucción] Cambiar return true por return false en AutorizacionProvisionalService y volver a ejecutar.\n");
+Console.WriteLine("=== 8. Verificar AutorizacionException ===");
 
+if (autorizacionService.Autorizar){
+    Console.WriteLine("[Estado actual] Autorización habilitada.");
+    Console.WriteLine("Para probar AutorizacionException cambiar Autorizar a false.\n");
+}else{
+    Console.WriteLine("[Estado actual] Autorización deshabilitada.");
+    Console.WriteLine("Para volver al funcionamiento normal cambiar Autorizar a true.\n");
+}
 
 Console.WriteLine("=== Fin de las pruebas ===");
