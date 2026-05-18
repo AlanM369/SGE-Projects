@@ -10,6 +10,6 @@ public class AutorizacionProvisionalService : IAutorizacionService
     {
         // Para esta entrega provisional, el método devuelve siempre true
         // Esto evita trabar el desarrollo de los Casos de Uso
-        return true;
+        return false;
     }
 }

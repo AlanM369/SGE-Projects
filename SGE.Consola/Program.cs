@@ -41,9 +41,9 @@ try
     var response = agregarExpediente.Ejecutar(request);
     Console.WriteLine($"[Éxito] Expediente creado. Id: {response.IdExpediente}\n");
 }
-catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
-catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 2. Listar expedientes ===");
@@ -54,7 +54,7 @@ try
         Console.WriteLine($"> Id: {e.Id} | Carátula: {e.Caratula} | Estado: {e.Estado}");
     Console.WriteLine();
 }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 3. Agregar un trámite y verificar cambio de estado automático ===");
@@ -73,9 +73,9 @@ try
     var expedienteActualizado = listarExpedientes.Ejecutar().First(e => e.Id == idExpediente);
     Console.WriteLine($"[Verificación] Estado del expediente: {expedienteActualizado.Estado} (esperado: ParaResolver)\n");
 }
-catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
-catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 4. Cambiar estado manualmente ===");
@@ -86,9 +86,9 @@ try
     cambiarEstado.Ejecutar(request);
     Console.WriteLine($"[Éxito] Estado cambiado a: {request.NuevoEstado}\n");
 }
-catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
-catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 5. Modificar carátula ===");
@@ -99,9 +99,9 @@ try
     modificarCaratula.Ejecutar(request);
     Console.WriteLine($"[Éxito] Carátula modificada a: {request.NuevaCaratula}\n");
 }
-catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
-catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 // ─── CAMINOS DE ERROR ─────────────────────────────────────────────────────────
@@ -112,8 +112,8 @@ try
     var request = new AgregarExpedienteRequest("", idUsuario);
     agregarExpediente.Ejecutar(request);
 }
-catch (DominioException ex) { Console.WriteLine($"[Se atajó el error de dominio]: {ex.Message}\n"); }
-catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
+catch (DominioException ex) { Console.WriteLine($"[DominioException]: {ex.Message}\n"); }
+catch (Exception ex) { Console.WriteLine($"[Exception]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 7. Intentar operar con un expediente inexistente ===");
@@ -122,7 +122,7 @@ try
     var request = new CambiarEstadoRequest(Guid.NewGuid(), EstadoExpediente.Finalizado, idUsuario);
     cambiarEstado.Ejecutar(request);
 }
-catch (Exception ex) { Console.WriteLine($"[Se atajó el error]: {ex.Message}\n"); }
+catch (EntidadNoEncontradaException ex) { Console.WriteLine($"[EntidadNoEncontradaException]: {ex.Message}\n"); }
 
 
 Console.WriteLine("=== 8. Verificar AutorizacionException (cambiar AutorizacionProvisionalService a false) ===");
