@@ -6,7 +6,7 @@ namespace SGE.Aplicacion.Expedientes;
 
 public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
 {
-    public void Ejecutar(CambiarEstadoRequest request)
+    public CambiarEstadoResponse Ejecutar(CambiarEstadoRequest request)
     {
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
             throw new AutorizacionException("El usuario no tiene permisos para modificar el estado.");
@@ -18,5 +18,7 @@ public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repositorio, I
         expediente.CambiarEstado(request.NuevoEstado, request.IdUsuario);
 
         repositorio.Modificar(expediente);
+
+        return new CambiarEstadoResponse();
     }
 }

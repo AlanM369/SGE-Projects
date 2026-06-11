@@ -3,9 +3,9 @@ namespace SGE.Aplicacion.Tramites;
 public class ListarTramitesPorExpedienteUseCase(ITramiteRepository tramiteRepositorio)
 {
     // Le pasamos el ID del expediente por parámetro
-    public IEnumerable<TramiteDetalleDTO> Ejecutar(Guid expedienteId)
+    public IEnumerable<TramiteDetalleDTO> Ejecutar(ListarTramitesPorExpedienteRequest request) //SIN REQUEST OBJECT
     {
-        var tramites = tramiteRepositorio.ObtenerPorExpedienteId(expedienteId);
+        var tramites = tramiteRepositorio.ObtenerPorExpedienteId(request.ExpedienteId);
         var dtos = new List<TramiteDetalleDTO>();
 
         foreach (var t in tramites)
@@ -14,6 +14,7 @@ public class ListarTramitesPorExpedienteUseCase(ITramiteRepository tramiteReposi
             var dto = new TramiteDetalleDTO(t.Id, t.ExpedienteId, t.Etiqueta, t.Contenido.Texto, t.FechaCreacion, t.FechaUltimaModificacion);
             dtos.Add(dto);
         }
-        return dtos;
+        return dtos.OrderBy(t => t.FechaCreacion).ToList(); // Ordenamos por fecha de creación
     }
+    public record ListarTramitesPorExpedienteRequest(Guid ExpedienteId);
 }

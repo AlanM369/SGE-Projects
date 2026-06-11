@@ -13,7 +13,7 @@ public class Tramite
     public DateTime FechaUltimaModificacion { get; private set; }
     public Guid UsuarioUltimoCambio { get; private set; }
 
-     // Constructor público: Se usa cuando el usuario crea un trámite nuevo.
+     // Constructor publico: Se usa cuando el usuario crea un tramite nuevo.
     // Genera automáticamente el ID y las fechas iniciales.
     public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioCreador) : this(Guid.NewGuid(), expedienteId, etiqueta, contenido, DateTime.Now, DateTime.Now, usuarioCreador)
     {
@@ -56,7 +56,7 @@ public class Tramite
         return new Tramite(id, expedienteId, etiqueta, contenido, fechaCreacion, fechaModificacion, usuario);
     }
 
-    // Método para alterar el trámite asegurando que se respeten las reglas de negocio.
+    // Metodo para alterar el tramite asegurando que se respeten las reglas de negocio.
     public void ModificarTramite(EtiquetaTramite nuevaEtiqueta, ContenidoTramite nuevoContenido, Guid idUsuario)
     {
         Etiqueta = nuevaEtiqueta;
@@ -70,6 +70,6 @@ public class Tramite
     private void ValidarFechas (DateTime fechaCreacion, DateTime fechaModificacion)
     {
         if (fechaModificacion < fechaCreacion)
-            throw new DominioException("La fecha de última modificacion no puede ser anterior a la fecha de creación");
+            throw new DominioException("La fecha de ultima modificacion no puede ser anterior a la fecha de creacion");
     }
 }

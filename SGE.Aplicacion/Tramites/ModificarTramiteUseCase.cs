@@ -7,7 +7,7 @@ namespace SGE.Aplicacion.Tramites;
 
 public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
 {
-    public void Ejecutar(ModificarTramiteRequest request)
+    public ModificarTramiteResponse Ejecutar(ModificarTramiteRequest request)
     {
          // 1. Verificamos la autorización del usuario
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.TramiteModificacion))
@@ -29,5 +29,7 @@ public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAut
         // 5. Orquestación: Forzamos la revisión del estado del expediente 
         // (por si el usuario cambió una etiqueta "PaseAEstudio" por una de "Resolucion")
         actualizadorEstado.Actualizar(tramite.ExpedienteId, request.IdUsuario);
+
+        return new ModificarTramiteResponse();
     }
 }

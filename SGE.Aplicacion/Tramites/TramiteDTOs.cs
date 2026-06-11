@@ -13,6 +13,8 @@ public record class BajaTramiteRequest(Guid TramiteId, Guid IdUsuario);
 
 // --- DTOs de Salida (Responses y Detalles) ---
 public record class AgregarTramiteResponse(Guid IdTramite);
+public record class ModificarTramiteResponse;
+public record class BajaTramiteResponse;
 
 public record class TramiteDetalleDTO(
     Guid Id, 

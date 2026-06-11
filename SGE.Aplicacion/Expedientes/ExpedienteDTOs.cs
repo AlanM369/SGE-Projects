@@ -20,10 +20,18 @@ public record class AgregarExpedienteRequest(string Caratula, Guid IdUsuario);
 public record class AgregarExpedienteResponse(Guid IdExpediente);
 
 // DTOs para Modificaciones
-// DTO para modificar la carátula
+// DTO para modificar la caratula
 public record class ModificarCaratulaRequest(Guid ExpedienteId, string NuevaCaratula, Guid IdUsuario);
 // DTO para dar de baja
 public record class BajaExpedienteRequest(Guid ExpedienteId, Guid IdUsuario);
 
 public record class CambiarEstadoRequest(Guid ExpedienteId, EstadoExpediente NuevoEstado, Guid IdUsuario);
+
+// Response DTOs para operaciones de mutación
+public record class ModificarCaratulaResponse;
+public record class BajaExpedienteResponse;
+public record class CambiarEstadoResponse;
+
+// Request DTO para consultas
+public record class ListarExpedientesRequest;
 

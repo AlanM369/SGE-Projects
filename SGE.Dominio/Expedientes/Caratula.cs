@@ -11,7 +11,7 @@ public record class Caratula
     {   
         // Validacion basica internamente al instanciar, no puede ser nulo, vacío o solo espacios.
         if (string.IsNullOrWhiteSpace(texto))
-            throw new DominioException("El texto de la caratula es invalido."); // Si la validación falla, se lanza una excepción de dominio.
+            throw new DominioException("El texto de la caratula es invalido."); // Si la validacion falla, se lanza una excepcion de dominio.
         
         Texto = texto.Trim(); // Trim() es una gran práctica para borrar espacios al principio y final
     }

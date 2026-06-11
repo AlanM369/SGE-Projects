@@ -9,7 +9,7 @@ public record class ContenidoTramite
 
     public ContenidoTramite(string texto)
     {
-         // Se valida internamente al instanciar. Si falla, lanza la excepción de dominio.
+         // Se valida internamente al instanciar. Si falla, lanza la excepcion de dominio.
         if (string.IsNullOrWhiteSpace(texto))
             throw new DominioException("El contenido ingresado no es valido.");
 

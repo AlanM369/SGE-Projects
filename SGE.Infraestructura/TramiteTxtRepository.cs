@@ -78,7 +78,7 @@ public class TramiteTxtRepository : ITramiteRepository
 
     public Tramite? ObtenerPorId(Guid id)
     {   
-        //recorre la lista hasta encontrar el trámite
+        //recorre la lista hasta encontrar el tramite
         return ObtenerTodos().FirstOrDefault(t => t.Id == id);
     }
 
@@ -88,7 +88,7 @@ public class TramiteTxtRepository : ITramiteRepository
         var index = todos.FindIndex(t => t.Id == tramite.Id);
 
         if (index == -1)
-            throw new RepositorioException($"No se pudo modificar: El trámite {tramite.Id} no existe en la base de datos.");
+            throw new RepositorioException($"No se pudo modificar: El tramite {tramite.Id} no existe en la base de datos.");
 
         todos[index] = tramite;
         ReescribirArchivo(todos);
@@ -102,7 +102,7 @@ public class TramiteTxtRepository : ITramiteRepository
         var cantidad = todos.RemoveAll(t => t.Id == id);
 
         if (cantidad == 0)
-            throw new RepositorioException($"No se pudo eliminar: El trámite {id} no existe en la base de datos.");
+            throw new RepositorioException($"No se pudo eliminar: El tramite {id} no existe en la base de datos.");
 
         ReescribirArchivo(todos);
             

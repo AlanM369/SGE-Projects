@@ -6,7 +6,7 @@ namespace SGE.Aplicacion.Expedientes;
 public class ListarExpedientesUseCase(IExpedienteRepository repositorio)
 {
     // El método devuelve un IEnumerable (una secuencia) de DTOs, no de Entidades
-    public IEnumerable<ExpedienteDetalleDTOs> Ejecutar()
+    public IEnumerable<ExpedienteDetalleDTOs> Ejecutar(ListarExpedientesRequest request)
     {   
         // 1. Obtenemos TODAS las entidades crudas desde la infraestructura
         var expedientes = repositorio.ObtenerTodos();
@@ -28,6 +28,6 @@ public class ListarExpedientesUseCase(IExpedienteRepository repositorio)
             listaDinamica.Add(dto);
         }
         // 3. Devolvemos la lista segura
-        return listaDinamica;
+        return listaDinamica.OrderBy(e => e.FechaCreacion).ToList(); // Ordenamiento por fecha de creación
     }
 }

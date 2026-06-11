@@ -52,17 +52,17 @@ public class Expediente
         return new Expediente(id, caratula, fechaCreacion, fechaModificacion, usuario, estado);
     }
 
-    // A. Modificar Carátula: Si el usuario cometió un error al ingresar el expediente, debe poder corregir la 
-    // carátula. Esta es una operación excepcional que no afecta el flujo de vida del expediente.
+    // A. Modificar Caratula: Si el usuario cometió un error al ingresar el expediente, debe poder corregir la 
+    // caratula. Esta es una operación excepcional que no afecta el flujo de vida del expediente.
     public void ModificarCaratula(Caratula nuevaCaratula, Guid idUsuario)
     {
         Caratula = nuevaCaratula;
         ActualizarAuditoria(idUsuario);
     }
 
-    // B. Cambio de Estado Automático (Por trámites): Al agregar, modificar o eliminar un trámite, el sistema
-    // puede cambiar automáticamente el estado del expediente según la etiqueta del trámite que haya quedado
-    // como "último" (considerando como "último" a aquel trámite con la fecha de creación más reciente):
+    // B. Cambio de Estado Automatico (Por tramites): Al agregar, modificar o eliminar un tramite, el sistema
+    // puede cambiar automaticamente el estado del expediente segun la etiqueta del tramite que haya quedado
+    // como "ultimo" (considerando como "ultimo" a aquel tramite con la fecha de creacion mas reciente):
     public bool ActualizarEstado(EtiquetaTramite? ultimaEtiqueta, Guid idUsuario)
     {
         EstadoExpediente nuevoEstado;

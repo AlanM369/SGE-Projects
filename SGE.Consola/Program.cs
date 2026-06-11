@@ -49,9 +49,9 @@ catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n");
 Console.WriteLine("=== 2. Listar expedientes ===");
 try
 {
-    var expedientes = listarExpedientes.Ejecutar();
+    var expedientes = listarExpedientes.Ejecutar(new ListarExpedientesRequest());
     foreach (var e in expedientes)
-        Console.WriteLine($"> Id: {e.Id} | Carátula: {e.Caratula} | Estado: {e.Estado}");
+        Console.WriteLine($"> Id: {e.Id} | Caratula: {e.Caratula} | Estado: {e.Estado}");
     Console.WriteLine();
 }
 catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n"); }
@@ -61,7 +61,7 @@ Console.WriteLine("=== 3. Agregar un trámite y verificar cambio de estado autom
 try
 {
     // Primero obtenemos el id del expediente que creamos antes
-    var expedientes = listarExpedientes.Ejecutar().ToList();
+    var expedientes = listarExpedientes.Ejecutar(new ListarExpedientesRequest()).ToList();
     var idExpediente = expedientes.First().Id;
 
     // Agregamos un trámite con etiqueta PaseAEstudio → debe cambiar el estado a ParaResolver
@@ -69,8 +69,8 @@ try
     var response = agregarTramite.Ejecutar(request);
     Console.WriteLine($"[Éxito] Trámite agregado. Id: {response.IdTramite} | Etiqueta: {request.Etiqueta}");
 
-    // Verificamos que el estado del expediente cambió automáticamente
-    var expedienteActualizado = listarExpedientes.Ejecutar().First(e => e.Id == idExpediente);
+    // Verificamos que el estado del expediente cambio automaticamente
+    var expedienteActualizado = listarExpedientes.Ejecutar(new ListarExpedientesRequest()).First(e => e.Id == idExpediente);
     Console.WriteLine($"[Verificación] Estado del expediente: {expedienteActualizado.Estado} (esperado: ParaResolver)\n");
 }
 catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
@@ -81,10 +81,10 @@ catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n");
 Console.WriteLine("=== 4. Cambiar estado manualmente ===");
 try
 {
-    var idExpediente = listarExpedientes.Ejecutar().First().Id;
+    var idExpediente = listarExpedientes.Ejecutar(new ListarExpedientesRequest()).First().Id;
     var request = new CambiarEstadoRequest(idExpediente, EstadoExpediente.EnNotificacion, idUsuario);
     cambiarEstado.Ejecutar(request);
-    Console.WriteLine($"[Éxito] Estado cambiado a: {request.NuevoEstado}\n");
+    Console.WriteLine($"[Exito] Estado cambiado a: {request.NuevoEstado}\n");
 }
 catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
 catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
@@ -94,10 +94,10 @@ catch (Exception ex) { Console.WriteLine($"[Error inesperado]: {ex.Message}\n");
 Console.WriteLine("=== 5. Modificar carátula ===");
 try
 {
-    var idExpediente = listarExpedientes.Ejecutar().First().Id;
-    var request = new ModificarCaratulaRequest(idExpediente, "Carátula corregida", idUsuario);
+    var idExpediente = listarExpedientes.Ejecutar(new ListarExpedientesRequest()).First().Id;
+    var request = new ModificarCaratulaRequest(idExpediente, "Caratula corregida", idUsuario);
     modificarCaratula.Ejecutar(request);
-    Console.WriteLine($"[Éxito] Carátula modificada a: {request.NuevaCaratula}\n");
+    Console.WriteLine($"[Exito] Caratula modificada a: {request.NuevaCaratula}\n");
 }
 catch (DominioException ex) { Console.WriteLine($"[Error de negocio]: {ex.Message}\n"); }
 catch (AutorizacionException ex) { Console.WriteLine($"[Error de autorización]: {ex.Message}\n"); }
