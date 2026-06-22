@@ -20,7 +20,8 @@ public record class TramiteDetalleDTO(
     EtiquetaTramite Etiqueta, 
     string Contenido, 
     DateTime FechaCreacion, 
-    DateTime FechaUltimaModificacion
+    DateTime FechaUltimaModificacion,
+    Guid UsuarioUltimoCambio
 );
 
 

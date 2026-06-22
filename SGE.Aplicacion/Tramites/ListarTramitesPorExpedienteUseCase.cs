@@ -11,7 +11,7 @@ public class ListarTramitesPorExpedienteUseCase(ITramiteRepository tramiteReposi
         foreach (var t in tramites)
         {   // Mapeamos de Entidad a DTO para proteger el encapsulamiento
             // Extraemos el texto del Value Objec
-            var dto = new TramiteDetalleDTO(t.Id, t.ExpedienteId, t.Etiqueta, t.Contenido.Texto, t.FechaCreacion, t.FechaUltimaModificacion);
+            var dto = new TramiteDetalleDTO(t.Id, t.ExpedienteId, t.Etiqueta, t.Contenido.Texto, t.FechaCreacion, t.FechaUltimaModificacion, t.UsuarioUltimoCambio);
             dtos.Add(dto);
         }
         return dtos;

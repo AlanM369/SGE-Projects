@@ -39,7 +39,7 @@ public class Tramite
             throw new DominioException("El id del usuario responsable del ultimo cambio es obligatorio.");
 
         // Centraliza la validación de la invariante de fechas.
-        ValidarFechas(FechaCreacion, FechaUltimaModificacion);
+        ValidarFechas(fechaCreacion, fechaUltimaModificacion);
 
         Id = id;
         ExpedienteId = expedienteId;

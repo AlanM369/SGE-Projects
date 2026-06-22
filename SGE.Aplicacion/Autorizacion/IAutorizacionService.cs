@@ -1,4 +1,6 @@
-using SGE.Aplicacion.Autorizacion;
+using SGE.Dominio.Autorizacion;
+
+//Permiso se movio a dominio, revisar referencias
 
 namespace SGE.Aplicacion.Autorizacion;
 

@@ -1,15 +1,16 @@
-using SGE.Aplicacion.Autorizacion; // Para que reconozca el enumerativo Permiso
+// using SGE.Aplicacion.Autorizacion; // Para que reconozca el enumerativo Permiso
 
-namespace SGE.Infraestructura;
+// namespace SGE.Infraestructura;
 
-// La clase implementa el contrato definido en la capa de Aplicación
-public class AutorizacionProvisionalService : IAutorizacionService
-{   
-     // Propiedad pública configurable
-    public bool Autorizar {get; set; } = true;
-    // El método requerido por la interfaz
-    public bool PoseeElPermiso(Guid idUsuario, Permiso permiso)
-    {
-        return Autorizar;
-    }
-}
+// // La clase implementa el contrato definido en la capa de Aplicación
+// //Eliminar esta clase
+// public class AutorizacionProvisionalService : IAutorizacionService
+// {   
+//      // Propiedad pública configurable
+//     public bool Autorizar {get; set; } = true;
+//     // El método requerido por la interfaz
+//     public bool PoseeElPermiso(Guid idUsuario, Permiso permiso)
+//     {
+//         return Autorizar;
+//     }
+// }

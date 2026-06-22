@@ -2,10 +2,11 @@ using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Comun;
 using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
+using SGE.Dominio.Autorizacion;
 
 namespace SGE.Aplicacion.Tramites;
 
-public class AgregarTramiteUseCase (ITramiteRepository tramiteRepositorio, IExpedienteRepository expedienteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
+public class AgregarTramiteUseCase (ITramiteRepository tramiteRepositorio, IExpedienteRepository expedienteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado, IUnidadDeTrabajo uow)
 {
     public AgregarTramiteResponse Ejecutar(AgregarTramiteRequest request)
     {   
@@ -26,6 +27,10 @@ public class AgregarTramiteUseCase (ITramiteRepository tramiteRepositorio, IExpe
 
         // 5.Le avisamos al actualizador que revise el expediente
         actualizadorEstado.Actualizar(request.ExpedienteId, request.IdUsuario);
+
+         // El actualizador ya no llama a Modificar directamente sobre el repo,
+         // solo marca el cambio en memoria. El Guardar() al final confirma todo.
+        uow.Guardar();
 
         // 6. Retorno del DTO
         return new AgregarTramiteResponse(nuevoTramite.Id);

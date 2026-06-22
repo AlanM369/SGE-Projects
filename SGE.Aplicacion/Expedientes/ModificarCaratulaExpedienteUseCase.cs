@@ -1,10 +1,11 @@
 using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Comun;
+using SGE.Dominio.Autorizacion;
 using SGE.Dominio.Expedientes;
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion)
+public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion, IUnidadDeTrabajo uow)
 {
     public void Ejecutar(ModificarCaratulaRequest request)
     {   
@@ -27,5 +28,6 @@ public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositori
 
         // 4. Persistencia: Guardamos el estado modificado
         repositorio.Modificar(expediente);
+        uow.Guardar();
     }
 }

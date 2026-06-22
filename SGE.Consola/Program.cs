@@ -5,32 +5,53 @@ using SGE.Dominio.Comun;
 using SGE.Dominio.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.Infraestructura;
+using SGE.Infraestructura.Repositorios;
 
 
 // ─── COMPOSITION ROOT ────────────────────────────────────────────────────────
 // Único lugar en todo el sistema donde se crean instancias concretas.
 // Los casos de uso solo conocen interfaces, nunca estas clases concretas.
 
+// ─── Autorizacion y pruebas ──────────────────────────────────────────────────────────────── 
+
+// 1. Instanciamos el contexto de la base de datos SQLite
+var contexto = new SgeContext();
+
+// Opcional: Nos aseguramos de que la base de datos exista (esto te sirve para el seeding luego)
+contexto.Database.EnsureCreated();
+
+// 2. Instanciamos el repositorio de usuarios pasándole el contexto
+var usuarioRepository = new UsuarioRepository(contexto);
+var autorizacionService = new AutorizacionService(usuarioRepository);
+
+var uow = new UnidadDeTrabajo(contexto);
+//Fin
+
 // Infraestructura
-var expedienteRepository    = new ExpedienteTxtRepository();
-var tramiteRepository       = new TramiteTxtRepository();
-var autorizacionService     = new AutorizacionProvisionalService();
+// var expedienteRepository    = new ExpedienteTxtRepository();
+// var tramiteRepository       = new TramiteTxtRepository();
+// var autorizacionService     = new AutorizacionProvisionalService();
+var expedienteRepository    = new ExpedienteRepository(contexto);
+var tramiteRepository       = new TramiteRepository(contexto);
 var actualizarEstado = new ActualizacionEstadoExpedienteService(expedienteRepository, tramiteRepository);
 
 // Casos de uso de Expedientes
-var agregarExpediente       = new AgregarExpedienteUseCase(expedienteRepository, autorizacionService);
-var eliminarExpediente      = new BajaExpedienteUseCase(expedienteRepository, tramiteRepository, autorizacionService);
-var modificarCaratula       = new ModificarCaratulaExpedienteUseCase(expedienteRepository, autorizacionService);
-var cambiarEstado           = new CambiarEstadoExpedienteUseCase(expedienteRepository, autorizacionService);
+var agregarExpediente       = new AgregarExpedienteUseCase(expedienteRepository, autorizacionService, uow);
+var eliminarExpediente      = new BajaExpedienteUseCase(expedienteRepository, tramiteRepository, autorizacionService, uow);
+var modificarCaratula       = new ModificarCaratulaExpedienteUseCase(expedienteRepository, autorizacionService, uow);
+var cambiarEstado           = new CambiarEstadoExpedienteUseCase(expedienteRepository, autorizacionService, uow);
 var listarExpedientes       = new ListarExpedientesUseCase(expedienteRepository);
 
 // Casos de uso de Trámites (completar con los de tu compañero)
-var agregarTramite          = new AgregarTramiteUseCase(tramiteRepository, expedienteRepository, autorizacionService, actualizarEstado);
-var eliminarTramite         = new BajaTramiteUseCase(tramiteRepository,autorizacionService, actualizarEstado);
-var modificarTramite        = new ModificarTramiteUseCase(tramiteRepository, autorizacionService, actualizarEstado);
+var agregarTramite          = new AgregarTramiteUseCase(tramiteRepository, expedienteRepository, autorizacionService, actualizarEstado, uow);
+var eliminarTramite         = new BajaTramiteUseCase(tramiteRepository,autorizacionService, actualizarEstado, uow);
+var modificarTramite        = new ModificarTramiteUseCase(tramiteRepository, autorizacionService, actualizarEstado, uow);
 var listarTramites          = new ListarTramitesPorExpedienteUseCase(tramiteRepository);
 
 var idUsuario = Guid.NewGuid(); // Simulamos un usuario logueado
+
+
+
 
 // ─── CAMINO FELIZ ─────────────────────────────────────────────────────────────
 
@@ -126,13 +147,13 @@ try
 catch (EntidadNoEncontradaException ex) { Console.WriteLine($"[EntidadNoEncontradaException]: {ex.Message}\n"); }
 catch (AutorizacionException ex) { Console.WriteLine($"[AutorizacionException]: {ex.Message}\n"); }
 
-Console.WriteLine("=== 8. Verificar AutorizacionException (cambiar AutorizacionProvisionalService a false) ===");
-if (autorizacionService.Autorizar){
-    Console.WriteLine("[Estado actual] Autorización habilitada.");
-    Console.WriteLine("Para probar AutorizacionException cambiar Autorizar a false.\n");
-}else{
-    Console.WriteLine("[Estado actual] Autorización deshabilitada.");
-    Console.WriteLine("Para volver al funcionamiento normal cambiar Autorizar a true.\n");
-}
+// Console.WriteLine("=== 8. Verificar AutorizacionException (cambiar AutorizacionProvisionalService a false) ===");
+// if (autorizacionService.Autorizar){
+//     Console.WriteLine("[Estado actual] Autorización habilitada.");
+//     Console.WriteLine("Para probar AutorizacionException cambiar Autorizar a false.\n");
+// }else{
+//     Console.WriteLine("[Estado actual] Autorización deshabilitada.");
+//     Console.WriteLine("Para volver al funcionamiento normal cambiar Autorizar a true.\n");
+// }
 
 Console.WriteLine("=== Fin de las pruebas ===");

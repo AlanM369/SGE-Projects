@@ -5,6 +5,17 @@
     <ProjectReference Include="..\SGE.Aplicacion\SGE.Aplicacion.csproj" />
   </ItemGroup>
 
+  //Paquete necesario para el token JWT
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+  </ItemGroup>
+
+  //Paquete necesario para Entity Framework Core con SQLite
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

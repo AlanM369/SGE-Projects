@@ -2,10 +2,11 @@ using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Comun;
 using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
+using SGE.Dominio.Autorizacion;
 
 namespace SGE.Aplicacion.Tramites;
 
-public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
+public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado, IUnidadDeTrabajo uow)
 {
     public void Ejecutar(ModificarTramiteRequest request)
     {
@@ -29,5 +30,7 @@ public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAut
         // 5. Orquestación: Forzamos la revisión del estado del expediente 
         // (por si el usuario cambió una etiqueta "PaseAEstudio" por una de "Resolucion")
         actualizadorEstado.Actualizar(tramite.ExpedienteId, request.IdUsuario);
+
+        uow.Guardar();
     }
 }

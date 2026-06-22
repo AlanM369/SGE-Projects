@@ -1,9 +1,10 @@
 using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Comun;
 using SGE.Aplicacion.Expedientes;
+using SGE.Dominio.Autorizacion;
 
 namespace SGE.Aplicacion.Tramites;
-public class BajaTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado)
+public class BajaTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado, IUnidadDeTrabajo uow)
 {
     public void Ejecutar(BajaTramiteRequest request)
     {   
@@ -25,5 +26,7 @@ public class BajaTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutoriza
         // 4. Orquestación: Recalculamos el estado del expediente afectado
         // Si borramos el trámite de "Resolución", el expediente podría volver a estado "ParaResolver"
         actualizadorEstado.Actualizar(expedienteId, request.IdUsuario);
+
+        uow.Guardar();
     }
 }

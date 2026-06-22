@@ -1,4 +1,6 @@
 using SGE.Dominio.Expedientes;
+using SGE.Aplicacion.Tramites;
+
 
 namespace SGE.Aplicacion.Expedientes;
 
@@ -27,3 +29,12 @@ public record class BajaExpedienteRequest(Guid ExpedienteId, Guid IdUsuario);
 
 public record class CambiarEstadoRequest(Guid ExpedienteId, EstadoExpediente NuevoEstado, Guid IdUsuario);
 
+//Expediente con la lista de sus tramites
+public record ExpedienteConTramitesDTO(
+    Guid Id,
+    string Caratula,
+    EstadoExpediente Estado,
+    DateTime FechaCreacion,
+    DateTime FechaUltimaModificacion,
+    List<TramiteDetalleDTO> Tramites
+);
