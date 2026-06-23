@@ -18,6 +18,11 @@ public class Tramite
     public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioCreador) : this(Guid.NewGuid(), expedienteId, etiqueta, contenido, DateTime.Now, DateTime.Now, usuarioCreador)
     {
     }
+    // Constructor protegido: requerido por EF Core para reconstruir entidades desde la BD
+    protected Tramite()
+    {
+        Contenido = null!;
+    }
 
     // Constructor privado: Centraliza toda la lógica de construcción.
     // Es utilizado tanto por el constructor público como por el Factory Method.

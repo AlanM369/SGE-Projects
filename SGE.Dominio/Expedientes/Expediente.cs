@@ -19,6 +19,12 @@ public class Expediente
     {
     }
 
+    // Constructor protegido: requerido por EF Core para reconstruir entidades desde la BD
+    protected Expediente()
+    {
+        Caratula = null!;
+    }
+
     // Constructor privado: Necesario para que el Factory Method pueda instanciar la clase sin pasar por las validaciones del alta.
      private Expediente( Guid id, Caratula caratula, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio, EstadoExpediente estado)
     {   

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SGE.Aplicacion\SGE.Aplicacion.csproj" />
+    <ProjectReference Include="..\SGE.Infraestructura\SGE.Infraestructura.csproj" />
+    <ProjectReference Include="..\SGE.Dominio\SGE.Dominio.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- JWT Bearer Authentication -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+    <!-- API Explorer para Scalar -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <!-- Scalar: UI de documentación moderna -->
+    <PackageReference Include="Scalar.AspNetCore" Version="2.5.14" />
+    <!-- EF Core para las migraciones/seed en WebApi -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>
