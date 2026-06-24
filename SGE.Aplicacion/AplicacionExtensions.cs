@@ -1,13 +1,10 @@
+using Microsoft.Extensions.DependencyInjection;
 using SGE.Aplicacion.Expedientes;
 using SGE.Aplicacion.Tramites;
 using SGE.Aplicacion.Usuarios;
 
-namespace SGE.WebApi;
+namespace SGE.Aplicacion;
 
-/// <summary>
-/// Métodos de extensión para registrar los Casos de Uso y Servicios de Aplicación.
-/// Siguiendo la sugerencia del TP2 de mantener un Program.cs limpio.
-/// </summary>
 public static class AplicacionExtensions
 {
     public static IServiceCollection AddAplicacion(this IServiceCollection services)

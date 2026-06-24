@@ -5,6 +5,7 @@ using Scalar.AspNetCore;
 using SGE.Infraestructura;
 using SGE.WebApi;
 using SGE.WebApi.Endpoints;
+using SGE.Aplicacion;
 
 // ══════════════════════════════════════════════════════════════
 //  FASE 1: CONFIGURACIÓN DEL BUILDER
