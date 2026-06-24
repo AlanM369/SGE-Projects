@@ -54,8 +54,8 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<SgeContext>();
 var hashService = scope.ServiceProvider.GetRequiredService<SGE.Aplicacion.Comun.IHashService>();
-SgeContextSeed.InicializarBaseDeDatos(context, hashService);
-
+var uow = scope.ServiceProvider.GetRequiredService<SGE.Aplicacion.Comun.IUnidadDeTrabajo>();
+SgeContextSeed.InicializarBaseDeDatos(context, hashService, uow);
 // ══════════════════════════════════════════════════════════════
 //  FASE 3: PIPELINE DE MIDDLEWARES
 //  El orden es CRÍTICO: Exception → Authentication → Authorization

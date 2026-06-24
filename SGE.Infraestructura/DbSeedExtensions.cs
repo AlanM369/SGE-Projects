@@ -7,7 +7,7 @@ namespace SGE.Infraestructura;
 
 public static class SgeContextSeed
 {
-    public static void InicializarBaseDeDatos(SgeContext context, IHashService hashService)
+    public static void InicializarBaseDeDatos(SgeContext context, IHashService hashService, IUnidadDeTrabajo uow)
     {
         if (context.Database.EnsureCreated())
         {
@@ -21,11 +21,11 @@ public static class SgeContextSeed
             }
 
             // ─── Datos Semilla ───
-            SeedUsuarios(context, hashService);
+            SeedUsuarios(context, hashService, uow);
         }
     }
 
-    private static void SeedUsuarios(SgeContext context, IHashService hashService)
+    private static void SeedUsuarios(SgeContext context, IHashService hashService, IUnidadDeTrabajo uow)
     {
         // 1. Administrador Semilla
         var admin = Usuario.Reconstruir(
@@ -56,6 +56,6 @@ public static class SgeContextSeed
         context.Usuarios.Add(admin);
         context.Usuarios.Add(usuarioConPermisos);
         context.Usuarios.Add(usuarioSinPermisos);
-        context.SaveChanges();
+        uow.Guardar();
     }
 }
