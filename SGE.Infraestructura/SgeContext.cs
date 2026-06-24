@@ -32,8 +32,23 @@ public class SgeContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Expediente>().ComplexProperty(e => e.Caratula);
-        modelBuilder.Entity<Tramite>().ComplexProperty(t => t.Contenido);
+        modelBuilder.Entity<Expediente>().ComplexProperty(e => e.Caratula, b =>
+    {
+        b.Property(c => c.Texto);
+    });
+
+    modelBuilder.Entity<Tramite>().ComplexProperty(t => t.Contenido, b =>
+    {
+        b.Property(c => c.Texto);
+    });modelBuilder.Entity<Expediente>().ComplexProperty(e => e.Caratula, b =>
+    {
+        b.Property(c => c.Texto);
+    });
+
+    modelBuilder.Entity<Tramite>().ComplexProperty(t => t.Contenido, b =>
+    {
+        b.Property(c => c.Texto);
+    });
 
         modelBuilder.Entity<Usuario>(b =>
         {
