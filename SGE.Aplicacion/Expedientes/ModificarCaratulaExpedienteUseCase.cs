@@ -7,7 +7,7 @@ namespace SGE.Aplicacion.Expedientes;
 
 public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositorio, IAutorizacionService autorizacion, IUnidadDeTrabajo uow)
 {
-    public void Ejecutar(ModificarCaratulaRequest request)
+    public ModificarCaratulaResponse Ejecutar(ModificarCaratulaRequest request)
     {   
         // 1. Se realiza el cheque de autorización
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteModificacion))
@@ -29,5 +29,7 @@ public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repositori
         // 4. Persistencia: Guardamos el estado modificado
         repositorio.Modificar(expediente);
         uow.Guardar();
+
+        return new ModificarCaratulaResponse();
     }
 }

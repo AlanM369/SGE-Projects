@@ -6,6 +6,7 @@ using SGE.Infraestructura;
 using SGE.WebApi;
 using SGE.WebApi.Endpoints;
 using SGE.Aplicacion;
+using Microsoft.OpenApi;
 
 // ══════════════════════════════════════════════════════════════
 //  FASE 1: CONFIGURACIÓN DEL BUILDER
@@ -43,7 +44,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // ─── OpenAPI / Scalar ───
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, _, _) =>
+    {
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+        {
+            ["Bearer"] = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Pegar el token JWT obtenido del endpoint /api/usuarios/login"
+            }
+        };
+        return Task.CompletedTask;
+    });
+});
+
+// ─── ProblemDetails + Manejador global de excepciones ───
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ManejadorDeExcepcionesGlobales>();
 
 // ══════════════════════════════════════════════════════════════
 //  FASE 2: CONSTRUCCIÓN DE LA APLICACIÓN
@@ -62,42 +84,7 @@ SgeContextSeed.InicializarBaseDeDatos(context, hashService, uow);
 //  El orden es CRÍTICO: Exception → Authentication → Authorization
 // ══════════════════════════════════════════════════════════════
 
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        var exceptionHandlerFeature = context.Features
-            .Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
-
-        if (exceptionHandlerFeature?.Error is null)
-            return;
-
-        var error = exceptionHandlerFeature.Error;
-
-        var (statusCode, titulo) = error switch
-        {
-            SGE.Aplicacion.Comun.AutorizacionException        => (StatusCodes.Status403Forbidden,            "Acceso denegado"),
-            SGE.Aplicacion.Comun.EntidadNoEncontradaException => (StatusCodes.Status404NotFound,             "Recurso no encontrado"),
-            SGE.Aplicacion.Comun.EntidadDuplicadaException    => (StatusCodes.Status400BadRequest,           "Recurso duplicado"),
-            SGE.Dominio.Comun.DominioException                => (StatusCodes.Status400BadRequest,           "Error de dominio"),
-            _                                                 => (StatusCodes.Status500InternalServerError,  "Error interno del servidor")
-        };
-
-        context.Response.StatusCode  = statusCode;
-        context.Response.ContentType = "application/problem+json";
-
-        var problemDetails = new Microsoft.AspNetCore.Mvc.ProblemDetails
-        {
-            Status   = statusCode,
-            Title    = titulo,
-            Detail   = error.Message,
-            Instance = context.Request.Path
-        };
-
-        await context.Response.WriteAsJsonAsync(problemDetails);
-    });
-});
-
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -116,10 +103,12 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(options =>
     {
         options.Title = "SGE - Sistema de Gestión de Expedientes";
+        options.AddPreferredSecuritySchemes("Bearer");
         options.AddHttpAuthentication("Bearer", auth =>
         {
             auth.Description = "Pegar el token JWT obtenido del endpoint /api/usuarios/login";
         });
+        options.WithPersistentAuthentication();
     });
 }
 

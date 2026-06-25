@@ -22,7 +22,7 @@ public static class ExpedientesEndpoints
         // Lista todos los expedientes. Cualquier usuario autenticado puede consultar.
         grupo.MapGet("/", (ListarExpedientesUseCase useCase) =>
         {
-            var expedientes = useCase.Ejecutar();
+            var expedientes = useCase.Ejecutar(new ListarExpedientesRequest());
             return Results.Ok(expedientes);
         })
         .RequireAuthorization()
@@ -36,7 +36,7 @@ public static class ExpedientesEndpoints
             Guid id,
             ObtenerExpedienteConTramitesUseCase useCase) =>
         {
-            var resultado = useCase.Ejecutar(id);
+            var resultado = useCase.Ejecutar(new ObtenerExpedienteConTramitesRequest(id));
             return Results.Ok(resultado);
         })
         .RequireAuthorization()

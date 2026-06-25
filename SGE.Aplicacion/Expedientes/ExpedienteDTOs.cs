@@ -29,6 +29,15 @@ public record class BajaExpedienteRequest(Guid ExpedienteId, Guid IdUsuario);
 
 public record class CambiarEstadoRequest(Guid ExpedienteId, EstadoExpediente NuevoEstado, Guid IdUsuario);
 
+// Response DTOs para operaciones de mutación
+public record class ModificarCaratulaResponse;
+public record class BajaExpedienteResponse;
+public record class CambiarEstadoResponse;
+
+// Request DTO para consultas
+public record class ListarExpedientesRequest;
+public record class ObtenerExpedienteConTramitesRequest(Guid ExpedienteId);
+
 //Expediente con la lista de sus tramites
 public record ExpedienteConTramitesDTO(
     Guid Id,

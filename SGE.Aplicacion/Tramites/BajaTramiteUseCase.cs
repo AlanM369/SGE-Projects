@@ -6,7 +6,7 @@ using SGE.Dominio.Autorizacion;
 namespace SGE.Aplicacion.Tramites;
 public class BajaTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado, IUnidadDeTrabajo uow)
 {
-    public void Ejecutar(BajaTramiteRequest request)
+    public BajaTramiteResponse Ejecutar(BajaTramiteRequest request)
     {   
         // 1. Verificamos la autorización del usuario
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.TramiteBaja))
@@ -28,5 +28,7 @@ public class BajaTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutoriza
         actualizadorEstado.Actualizar(expedienteId, request.IdUsuario);
 
         uow.Guardar();
+
+        return new BajaTramiteResponse();
     }
 }

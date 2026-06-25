@@ -24,7 +24,7 @@ public static class TramitesEndpoints
             Guid expedienteId,
             ListarTramitesPorExpedienteUseCase useCase) =>
         {
-            var tramites = useCase.Ejecutar(expedienteId);
+            var tramites = useCase.Ejecutar(new ListarTramitesPorExpedienteRequest(expedienteId));
             return Results.Ok(tramites);
         })
         .RequireAuthorization()

@@ -7,7 +7,7 @@ namespace SGE.Aplicacion.Expedientes;
 
 public class BajaExpedienteUseCase(IExpedienteRepository expedienteRepositorio, ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, IUnidadDeTrabajo uow)
 {
-    public void Ejecutar(BajaExpedienteRequest request)
+    public BajaExpedienteResponse Ejecutar(BajaExpedienteRequest request)
     {   
         // 1. Verificamos permisos
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.ExpedienteBaja))
@@ -28,6 +28,8 @@ public class BajaExpedienteUseCase(IExpedienteRepository expedienteRepositorio, 
         // 4. Finalmente, borramos el expediente
         expedienteRepositorio.Eliminar(request.ExpedienteId);
         uow.Guardar();
+
+        return new BajaExpedienteResponse();
     }
 }
 

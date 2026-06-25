@@ -40,18 +40,16 @@ public class SgeContext : DbContext
     modelBuilder.Entity<Tramite>().ComplexProperty(t => t.Contenido, b =>
     {
         b.Property(c => c.Texto);
-    });modelBuilder.Entity<Expediente>().ComplexProperty(e => e.Caratula, b =>
-    {
-        b.Property(c => c.Texto);
-    });
-
-    modelBuilder.Entity<Tramite>().ComplexProperty(t => t.Contenido, b =>
-    {
-        b.Property(c => c.Texto);
     });
 
         modelBuilder.Entity<Usuario>(b =>
         {
+            var comparer = new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<Permiso>>(
+                (c1, c2) => c1!.SequenceEqual(c2!),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            );
+
             b.Property<List<Permiso>>("_permisos")
             .HasColumnName("Permisos")
             .HasField("_permisos")
@@ -63,7 +61,8 @@ public class SgeContext : DbContext
                     : valor.Split(",", StringSplitOptions.RemoveEmptyEntries)
                             .Select(p => Enum.Parse<Permiso>(p))
                             .ToList()
-            );
+            )
+            .Metadata.SetValueComparer(comparer);
         });
     }
 }

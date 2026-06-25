@@ -8,14 +8,14 @@ namespace SGE.Aplicacion.Expedientes;
 //Como es de lectura no necesita chequear los permisos
 public class ObtenerExpedienteConTramitesUseCase(IExpedienteRepository expedienteRepositorio, ITramiteRepository tramiteRepositorio)
 {
-    public ExpedienteConTramitesDTO Ejecutar(Guid expedienteId)
+    public ExpedienteConTramitesDTO Ejecutar(ObtenerExpedienteConTramitesRequest request)
     {
         //Se bsuca el expediente, si no se encuentra lanza excpecion
-        var expediente = expedienteRepositorio.ObtenerPorId(expedienteId)
-            ?? throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {expedienteId}.");
+        var expediente = expedienteRepositorio.ObtenerPorId(request.ExpedienteId)
+            ?? throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}.");
 
         //Busca los tramites del expediente con el .Select
-        var tramites = tramiteRepositorio.ObtenerPorExpedienteId(expedienteId)
+        var tramites = tramiteRepositorio.ObtenerPorExpedienteId(request.ExpedienteId)
             .Select(t => new TramiteDetalleDTO(t.Id, t.ExpedienteId, t.Etiqueta, t.Contenido.Texto, t.FechaCreacion, t.FechaUltimaModificacion, t.UsuarioUltimoCambio));
 
         //DTO con los datos del expediente y al lista de tramites

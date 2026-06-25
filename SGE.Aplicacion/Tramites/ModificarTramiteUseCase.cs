@@ -8,7 +8,7 @@ namespace SGE.Aplicacion.Tramites;
 
 public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAutorizacionService autorizacion, ActualizacionEstadoExpedienteService actualizadorEstado, IUnidadDeTrabajo uow)
 {
-    public void Ejecutar(ModificarTramiteRequest request)
+    public ModificarTramiteResponse Ejecutar(ModificarTramiteRequest request)
     {
          // 1. Verificamos la autorización del usuario
         if (!autorizacion.PoseeElPermiso(request.IdUsuario, Permiso.TramiteModificacion))
@@ -32,5 +32,7 @@ public class ModificarTramiteUseCase(ITramiteRepository tramiteRepositorio, IAut
         actualizadorEstado.Actualizar(tramite.ExpedienteId, request.IdUsuario);
 
         uow.Guardar();
+
+        return new ModificarTramiteResponse();
     }
 }
