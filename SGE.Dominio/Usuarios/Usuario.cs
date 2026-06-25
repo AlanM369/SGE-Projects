@@ -61,7 +61,6 @@ public class Usuario
 
     // --- Métodos de negocio ---
 
-
     public void ModificarDatos(string nuevoNombre, string nuevoCorreo)
     {
         if (string.IsNullOrWhiteSpace(nuevoNombre))

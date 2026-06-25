@@ -1,8 +1,8 @@
 using SGE.Aplicacion.Comun;
 
 
-//Guarda los cambios en la base de datos
-namespace SGE.Infraestructura;
+// Confirmar y persistir de manera atómica en la base de datos
+namespace SGE.Infraestructura.Persistencia;
 
 public class UnidadDeTrabajo(SgeContext context) : IUnidadDeTrabajo
 {

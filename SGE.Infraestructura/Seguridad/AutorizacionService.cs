@@ -2,8 +2,8 @@ using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Usuarios;
 using SGE.Dominio.Autorizacion;
 
-//Chequea los permisos
-namespace SGE.Infraestructura;
+// Valida los accesos y las reglas de implicancia de permisos de los usuarios
+namespace SGE.Infraestructura.Seguridad;
 
 public class AutorizacionService(IUsuarioRepository usuarioRepositorio) : IAutorizacionService
 {
@@ -19,7 +19,7 @@ public class AutorizacionService(IUsuarioRepository usuarioRepositorio) : IAutor
         if (usuario.EsAdministrador)
             return true;
 
-        // Regla de implicancia (Lo pide el tp en 3.3): ExpedienteBaja implica TramiteBaja
+        // Regla de implicancia: ExpedienteBaja implica TramiteBaja
         if (permiso == Permiso.TramiteBaja && usuario.Permisos.Contains(Permiso.ExpedienteBaja))
             return true;
 

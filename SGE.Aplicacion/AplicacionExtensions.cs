@@ -9,7 +9,7 @@ public static class AplicacionExtensions
 {
     public static IServiceCollection AddAplicacion(this IServiceCollection services)
     {
-        // ─── Casos de Uso de Expedientes ───
+        // Casos de Uso de Expedientes
         services.AddScoped<AgregarExpedienteUseCase>();
         services.AddScoped<BajaExpedienteUseCase>();
         services.AddScoped<ModificarCaratulaExpedienteUseCase>();
@@ -17,16 +17,16 @@ public static class AplicacionExtensions
         services.AddScoped<ListarExpedientesUseCase>();
         services.AddScoped<ObtenerExpedienteConTramitesUseCase>();
 
-        // ─── Casos de Uso de Trámites ───
+        // Casos de Uso de Trámites
         services.AddScoped<AgregarTramiteUseCase>();
         services.AddScoped<BajaTramiteUseCase>();
         services.AddScoped<ModificarTramiteUseCase>();
         services.AddScoped<ListarTramitesPorExpedienteUseCase>();
 
-        // ─── Servicio de dominio: actualización automática del estado ───
+        // Servicio de dominio: actualización automática del estado
         services.AddScoped<ActualizacionEstadoExpedienteService>();
 
-        // ─── Casos de Uso de Usuarios / Autenticación ───
+        // Casos de Uso de Usuarios / Autenticación
         services.AddScoped<RegistrarUsuarioUseCase>();
         services.AddScoped<LoginUseCase>();
         services.AddScoped<ModificarMisDatosUseCase>();

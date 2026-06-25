@@ -4,22 +4,17 @@ using SGE.Dominio.Expedientes;
 
 namespace SGE.WebApi.Endpoints;
 
-/// <summary>
-/// Endpoints para la gestión de Expedientes.
-/// Agrupados con .WithTags("Expedientes") para organizar la interfaz de Scalar.
-/// </summary>
+// Endpoints para la gestión de Expedientes agrupados en una sola clase
 public static class ExpedientesEndpoints
 {
     public static void MapExpedientesEndpoints(this IEndpointRouteBuilder app)
     {
         var grupo = app.MapGroup("/api/expedientes").WithTags("Expedientes");
 
-        // ─────────────────────────────────────────
         //  ENDPOINTS DE LECTURA (token requerido)
-        // ─────────────────────────────────────────
 
         // GET /api/expedientes
-        // Lista todos los expedientes. Cualquier usuario autenticado puede consultar.
+        // Lista todos los expedientes.
         grupo.MapGet("/", (ListarExpedientesUseCase useCase) =>
         {
             var expedientes = useCase.Ejecutar(new ListarExpedientesRequest());
@@ -44,9 +39,7 @@ public static class ExpedientesEndpoints
         .WithSummary("Obtener expediente con sus trámites")
         .WithDescription("Devuelve el detalle completo de un expediente junto con la colección de trámites que posee.");
 
-        // ─────────────────────────────────────────
-        //  ENDPOINTS MUTANTES (token + permisos)
-        // ─────────────────────────────────────────
+        //  ENDPOINTS QUE MODIFICAN DATOS (token + permiso puntual)
 
         // POST /api/expedientes
         // Crea un nuevo expediente. Requiere permiso ExpedienteAlta.
@@ -119,6 +112,7 @@ public static class ExpedientesEndpoints
         .WithDescription("Elimina el expediente y todos sus trámites asociados. Requiere el permiso 'ExpedienteBaja'.");
     }
 
+    // Helper para no repetir esta misma extracción en cada endpoint
     private static Guid ObtenerUserIdDelToken(ClaimsPrincipal user)
     {
         var valor = user.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -128,8 +122,7 @@ public static class ExpedientesEndpoints
     }
 }
 
-// ─── Request bodies auxiliares ───
-
+// Cuerpos (body) que se reciben en el JSON del request
 public record AgregarExpedienteBodyRequest(string Caratula);
 public record ModificarCaratulaBodyRequest(string NuevaCaratula);
 public record CambiarEstadoBodyRequest(EstadoExpediente NuevoEstado);

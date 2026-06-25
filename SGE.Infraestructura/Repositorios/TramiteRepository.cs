@@ -1,8 +1,10 @@
 using SGE.Aplicacion.Tramites;
 using SGE.Dominio.Tramites;
+using SGE.Infraestructura.Persistencia;
 
 namespace SGE.Infraestructura.Repositorios;
 
+// Repositorio de infraestructura para la persistencia y gestión de trámites mediante Entity Framework Core
 public class TramiteRepository(SgeContext context) : ITramiteRepository
 {
     public void Agregar(Tramite tramite)
@@ -24,11 +26,10 @@ public class TramiteRepository(SgeContext context) : ITramiteRepository
             .ToList();
     }
 
-    //Lo mismo que expediente con el modificar
+
     public void Modificar(Tramite tramite)
     {
-        // EF Core trackea los cambios automáticamente,
-        // no es necesario llamar a Update()
+        // EF Core trackea los cambios automáticamente, no es necesario llamar a Update()
     }
 
     public void Eliminar(Guid id)

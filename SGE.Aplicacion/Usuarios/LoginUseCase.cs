@@ -15,7 +15,6 @@ public class LoginUseCase(IUsuarioRepository repositorio, IHashService hashServi
             throw new AutorizacionException("Credenciales inválidas.");
 
         // 3. Generamos el token JWT
-        // Completar
         var token = jwtService.GenerarToken(usuario.Id);
 
         return new LoginResponse(token);

@@ -9,24 +9,24 @@ public class ActualizacionEstadoExpedienteService(IExpedienteRepository expedien
 {
     public void Actualizar(Guid expedienteId, Guid idUsuario)
     {
-        // Buscamos el expediente
+        // 1. Buscamos el expediente
         var expediente = expedienteRepositorio.ObtenerPorId(expedienteId)
             ?? throw new EntidadNoEncontradaException("Expediente no encontrado");
 
-        // Buscamos todos los trámites de este expediente
+        // 2. Buscamos todos los trámites de este expediente
         var tramites = tramiteRepositorio.ObtenerPorExpedienteId(expedienteId);
         
-        // Buscamos el último trámite ingresado ordenando por fecha
+        // 3. Buscamos el último trámite ingresado ordenando por fecha
         // (FirstOrDefault devuelve el primero de la lista, o null si la lista está vacía)
         var ultimoTramite = tramites.OrderByDescending(t => t.FechaCreacion).FirstOrDefault();
         
-        // Extraemos la etiqueta del ultimo tramite(si no hay trámites, enviamos null)
+        // 4. Extraemos la etiqueta del ultimo tramite(si no hay trámites, enviamos null)
         EtiquetaTramite? ultimaEtiqueta = ultimoTramite?.Etiqueta;
 
-        // Le pedimos a la entidad de Dominio que aplique sus reglas y cambie su estado si corresponde
+        // 5. Le pedimos a la entidad de Dominio que aplique sus reglas y cambie su estado si corresponde
         bool cambio = expediente.ActualizarEstado(ultimaEtiqueta, idUsuario);
 
-        // Solo vamos al repositorio a guardar si el dominio nos confirmó que hubo un cambio real
+        // 6. Solo vamos al repositorio a guardar si el dominio nos confirmó que hubo un cambio real
         if (cambio)
             expedienteRepositorio.Modificar(expediente);
     }

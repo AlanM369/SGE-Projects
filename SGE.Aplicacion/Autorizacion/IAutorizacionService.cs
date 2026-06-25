@@ -1,11 +1,8 @@
 using SGE.Dominio.Autorizacion;
 
-//Permiso se movio a dominio, revisar referencias
-
 namespace SGE.Aplicacion.Autorizacion;
 
-// Este contrato nos va a permitir preguntar si un usuario puede hacer una acción,
-// aislando la lógica de seguridad del Caso de Uso.
+// Este contrato nos va a permitir preguntar si un usuario puede hacer una acción, aislando la lógica de seguridad del Caso de Uso.
 public interface IAutorizacionService
 {   
     // Recibe el id del usuario que intenta realizar la acción y el permiso requerido.

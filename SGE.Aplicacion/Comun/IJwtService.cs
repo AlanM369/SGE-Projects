@@ -1,6 +1,6 @@
 namespace SGE.Aplicacion.Comun;
 
-//Falta definir la clase que genera el token
+// Interfaz para la generación de tokens de autenticación
 public interface IJwtService
 {
     string GenerarToken(Guid userId);

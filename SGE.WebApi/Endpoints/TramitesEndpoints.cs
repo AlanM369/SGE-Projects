@@ -4,19 +4,14 @@ using SGE.Dominio.Tramites;
 
 namespace SGE.WebApi.Endpoints;
 
-/// <summary>
-/// Endpoints para la gestión de Trámites.
-/// Agrupados con .WithTags("Tramites") para organizar la interfaz de Scalar.
-/// </summary>
+// Endpoints de Trámites, agrupados en una sola clase
 public static class TramitesEndpoints
 {
     public static void MapTramitesEndpoints(this IEndpointRouteBuilder app)
     {
         var grupo = app.MapGroup("/api/tramites").WithTags("Tramites");
 
-        // ─────────────────────────────────────────
-        //  ENDPOINTS DE LECTURA (token requerido)
-        // ─────────────────────────────────────────
+        //  ENDPOINTS DE LECTURA (solo token requerido)
 
         // GET /api/tramites/por-expediente/{expedienteId}
         // Lista todos los trámites de un expediente dado.
@@ -32,9 +27,7 @@ public static class TramitesEndpoints
         .WithSummary("Listar trámites de un expediente")
         .WithDescription("Devuelve todos los trámites asociados al expediente indicado. Solo lectura.");
 
-        // ─────────────────────────────────────────
-        //  ENDPOINTS MUTANTES (token + permisos)
-        // ─────────────────────────────────────────
+        //  ENDPOINTS QUE MODIFICAN DATOS (token + permiso puntual de cada caso)
 
         // POST /api/tramites
         // Agrega un trámite a un expediente. Requiere permiso TramiteAlta.
@@ -73,7 +66,7 @@ public static class TramitesEndpoints
 
         // DELETE /api/tramites/{id}
         // Da de baja un trámite. Requiere permiso TramiteBaja.
-        // Nota: tener ExpedienteBaja implica implícitamente TramiteBaja (regla 3.3 del TP2).
+        // Nota: tener ExpedienteBaja implica implícitamente TramiteBaja.
         grupo.MapDelete("/{id:guid}", (
             Guid id,
             ClaimsPrincipal user,
@@ -90,6 +83,7 @@ public static class TramitesEndpoints
         .WithDescription("Requiere el permiso 'TramiteBaja'. Recuerda: tener 'ExpedienteBaja' implica automáticamente 'TramiteBaja'.");
     }
 
+    // Mismo helper que en ExpedientesEndpoints
     private static Guid ObtenerUserIdDelToken(ClaimsPrincipal user)
     {
         var valor = user.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -99,7 +93,6 @@ public static class TramitesEndpoints
     }
 }
 
-// ─── Request bodies auxiliares ───
-
+// Bodies que recibe cada endpoint mutativo.
 public record AgregarTramiteBodyRequest(Guid ExpedienteId, EtiquetaTramite Etiqueta, string Contenido);
 public record ModificarTramiteBodyRequest(EtiquetaTramite NuevaEtiqueta, string NuevoContenido);

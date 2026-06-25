@@ -1,8 +1,10 @@
 using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Expedientes;
+using SGE.Infraestructura.Persistencia;
 
 namespace SGE.Infraestructura.Repositorios;
 
+// Repositorio de infraestructura para la persistencia y gestión de expedientes utilizando Entity Framework Core
 public class ExpedienteRepository(SgeContext context) : IExpedienteRepository
 {
     public void Agregar(Expediente expediente)
@@ -24,15 +26,8 @@ public class ExpedienteRepository(SgeContext context) : IExpedienteRepository
 
     public void Modificar(Expediente expediente)
     {
-        // EF Core trackea los cambios automáticamente,
-        // no es necesario llamar a Update()
+        // EF Core trackea los cambios automáticamente, no es necesario llamar a Update()
     }
-
-    //En la teoria el modificar es automatico como arriba, pero esto puede traer problemas si el objeto no esta traido de la base de datos, cuidado
-    // public void Modificar(Expediente expediente)
-    // {
-    //     context.Expedientes.Update(expediente);
-    // }
 
     public void Eliminar(Guid id)
     {

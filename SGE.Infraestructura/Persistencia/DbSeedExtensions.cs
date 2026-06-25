@@ -3,24 +3,28 @@ using SGE.Dominio.Autorizacion;
 using SGE.Dominio.Usuarios;
 using Microsoft.EntityFrameworkCore;
 
-namespace SGE.Infraestructura;
+namespace SGE.Infraestructura.Persistencia;
 
+// Clase estática encargada de la creación inicial de la base de datos, la configuración del motor SQLite y la inserción de los datos semilla requeridos.
 public static class SgeContextSeed
 {
     public static void InicializarBaseDeDatos(SgeContext context, IHashService hashService, IUnidadDeTrabajo uow)
     {
+        // 1. Verificación y creación de la base de datos si no existe previamente
         if (context.Database.EnsureCreated())
         {
-            // ─── journal_mode=DELETE (recomendación del TP2) ───
+            // 2. Apertura de la conexión física para ejecutar comandos nativos de SQLite
             var connection = context.Database.GetDbConnection();
             connection.Open();
+
+            // 3. Configuración del modo de registro de transacciones en DELETE para asegurar escritura directa e inmediata
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = "PRAGMA journal_mode=DELETE;";
                 command.ExecuteNonQuery();
             }
 
-            // ─── Datos Semilla ───
+            // 4. Invocación al método encargado de poblar las tablas con los usuarios iniciales
             SeedUsuarios(context, hashService, uow);
         }
     }

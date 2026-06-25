@@ -3,19 +3,14 @@ using SGE.Aplicacion.Usuarios;
 
 namespace SGE.WebApi.Endpoints;
 
-/// <summary>
-/// Endpoints para autenticación y gestión de usuarios.
-/// Agrupados con .WithTags("Usuarios") para organizar la interfaz de Scalar.
-/// </summary>
+// Endpoints para autenticación y gestión de usuarios.
 public static class UsuariosEndpoints
 {
     public static void MapUsuariosEndpoints(this IEndpointRouteBuilder app)
     {
         var grupo = app.MapGroup("/api/usuarios").WithTags("Usuarios");
 
-        // ─────────────────────────────────────────
         //  ENDPOINTS PÚBLICOS (sin token requerido)
-        // ─────────────────────────────────────────
 
         // POST /api/usuarios/registrar
         // Registro abierto para cualquier persona.
@@ -43,9 +38,7 @@ public static class UsuariosEndpoints
         .WithSummary("Iniciar sesión")
         .WithDescription("Devuelve un token JWT. Usar ese token en el botón 'Authorize' de Scalar para acceder a los endpoints protegidos.");
 
-        // ─────────────────────────────────────────
         //  ENDPOINTS PROTEGIDOS (token requerido)
-        // ─────────────────────────────────────────
 
         // PUT /api/usuarios/mis-datos
         // Cualquier usuario autenticado puede actualizar sus propios datos.
@@ -76,12 +69,10 @@ public static class UsuariosEndpoints
         .WithSummary("Modificar mis datos personales")
         .WithDescription("Permite al usuario autenticado actualizar su nombre, correo y/o contraseña. El ID se obtiene del token JWT.");
 
-        // ─────────────────────────────────────────
         //  ENDPOINTS EXCLUSIVOS DEL ADMINISTRADOR
-        // ─────────────────────────────────────────
 
         // GET /api/usuarios
-        // Lista todos los usuarios del sistema. Solo administradores.
+        // Lista todos los usuarios del sistema.
         grupo.MapGet("/", (
             ClaimsPrincipal user,
             ListarUsuariosUseCase useCase) =>
@@ -96,7 +87,7 @@ public static class UsuariosEndpoints
         .WithDescription("Devuelve la lista completa de usuarios. Solo accesible para administradores.");
 
         // DELETE /api/usuarios/{id}
-        // Da de baja a un usuario. Solo administradores.
+        // Da de baja a un usuario.
         grupo.MapDelete("/{id:guid}", (
             Guid id,
             ClaimsPrincipal user,
@@ -113,7 +104,7 @@ public static class UsuariosEndpoints
         .WithDescription("Da de baja a un usuario del sistema. Solo accesible para administradores.");
 
         // PUT /api/usuarios/{id}/permisos
-        // Modifica los permisos de un usuario. Solo administradores.
+        // Modifica los permisos de un usuario.
         grupo.MapPut("/{id:guid}/permisos", (
             Guid id,
             ModificarPermisosBodyRequest body,
@@ -131,7 +122,7 @@ public static class UsuariosEndpoints
         .WithDescription("Reemplaza completamente los permisos del usuario indicado. Solo accesible para administradores.");
     }
 
-    // ─── Helper: extrae el Guid del claim NameIdentifier del token ───
+    // Helper para no repetir esta misma extracción en cada endpoint
     private static Guid ObtenerUserIdDelToken(ClaimsPrincipal user)
     {
         var valor = user.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -141,9 +132,6 @@ public static class UsuariosEndpoints
     }
 }
 
-// ─── Request bodies auxiliares ───
-// Separamos el body del endpoint para no incluir el IdUsuario
-// (ese siempre viene del token, nunca del cliente).
-
+// Separamos el body del endpoint para no incluir el IdUsuario, (ese siempre viene del token, nunca del cliente).
 public record ModificarMisDatosBodyRequest(string NuevoNombre, string NuevoCorreo, string? NuevaContrasena);
 public record ModificarPermisosBodyRequest(List<SGE.Dominio.Autorizacion.Permiso> NuevosPermisos);

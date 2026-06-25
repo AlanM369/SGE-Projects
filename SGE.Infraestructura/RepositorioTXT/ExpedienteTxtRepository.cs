@@ -2,7 +2,7 @@ using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Comun;
 
-namespace SGE.Infraestructura;
+namespace SGE.Infraestructura.ReopositorioTXT;
 
 // Implementación concreta de IExpedienteRepository.
 // Persiste los expedientes en un archivo .txt, guardando cada dato en una línea separada.

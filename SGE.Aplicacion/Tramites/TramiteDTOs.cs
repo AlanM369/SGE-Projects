@@ -28,10 +28,3 @@ public record class TramiteDetalleDTO(
     DateTime FechaUltimaModificacion,
     Guid UsuarioUltimoCambio
 );
-
-
-
-// DTOs para Consultas (Listados) para evitar que la entidad "escape" de la capa
-//public record class TramiteDetalleDTO(Guid Id, Guid ExpedienteId, EtiquetaTramite Etiqueta, string Contenido, DateTime FechaCreacion, DateTime FechaUltimaModificacion);
-
-//public record class ExpedienteDetalleDTO(Guid Id, string Caratula, EstadoExpediente Estado, DateTime FechaCreacion, DateTime FechaUltimaModificacion);

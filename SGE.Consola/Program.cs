@@ -6,6 +6,8 @@ using SGE.Dominio.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.Infraestructura;
 using SGE.Infraestructura.Repositorios;
+using SGE.Infraestructura.Persistencia;
+using SGE.Infraestructura.Seguridad;
 
 
 // ─── COMPOSITION ROOT ────────────────────────────────────────────────────────
@@ -28,9 +30,6 @@ var uow = new UnidadDeTrabajo(contexto);
 //Fin
 
 // Infraestructura
-// var expedienteRepository    = new ExpedienteTxtRepository();
-// var tramiteRepository       = new TramiteTxtRepository();
-// var autorizacionService     = new AutorizacionProvisionalService();
 var expedienteRepository    = new ExpedienteRepository(contexto);
 var tramiteRepository       = new TramiteRepository(contexto);
 var actualizarEstado = new ActualizacionEstadoExpedienteService(expedienteRepository, tramiteRepository);

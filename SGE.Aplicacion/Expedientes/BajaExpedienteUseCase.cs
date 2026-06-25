@@ -18,7 +18,7 @@ public class BajaExpedienteUseCase(IExpedienteRepository expedienteRepositorio, 
             ?? throw new EntidadNoEncontradaException($"No se encontró el expediente con ID {request.ExpedienteId}");
 
         // 3. Orquestación de la Baja en Cascada, primero los tramites asociados, luego el expediente
-        // 1. Buscamos y eliminamos uno por uno todos los trámites asociados al expediente
+        // Buscamos y eliminamos uno por uno todos los trámites asociados al expediente
         var tramitesAsociados = tramiteRepositorio.ObtenerPorExpedienteId(request.ExpedienteId);
         foreach (var tramite in tramitesAsociados)
         {

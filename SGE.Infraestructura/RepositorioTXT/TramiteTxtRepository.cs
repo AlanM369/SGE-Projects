@@ -2,7 +2,7 @@ using SGE.Aplicacion.Tramites;
 using SGE.Dominio.Tramites;
 using SGE.Aplicacion.Comun;
 
-namespace SGE.Infraestructura;
+namespace SGE.Infraestructura.ReopositorioTXT;
 
 public class TramiteTxtRepository : ITramiteRepository
 {
