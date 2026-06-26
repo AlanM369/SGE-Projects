@@ -25,6 +25,8 @@ public class AgregarTramiteUseCase (ITramiteRepository tramiteRepositorio, IExpe
         // 4. Persistencia del Trámite
         tramiteRepositorio.Agregar(nuevoTramite);
 
+        uow.Guardar();
+
         // 5.Le avisamos al actualizador que revise el expediente
         actualizadorEstado.Actualizar(request.ExpedienteId, request.IdUsuario);
 
