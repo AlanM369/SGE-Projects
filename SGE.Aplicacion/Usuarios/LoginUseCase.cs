@@ -2,7 +2,7 @@ using SGE.Aplicacion.Comun;
 
 namespace SGE.Aplicacion.Usuarios;
 
-public class LoginUseCase(IUsuarioRepository repositorio, IHashService hashService, IJwtService jwtService)
+public class LoginUseCase(IUsuarioRepository repositorio, IHashService hashService, ITokenProvider jwtService)
 {
     public LoginResponse Ejecutar(LoginRequest request)
     {

@@ -41,7 +41,7 @@ public static class InfraestructuraExtensions
         //5. Servicios de Infraestructura
         services.AddScoped<IAutorizacionService, AutorizacionService>();
         services.AddScoped<IHashService, HashService>();
-        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<ITokenProvider, JwtTokenProvider>();
 
         return services;
     }

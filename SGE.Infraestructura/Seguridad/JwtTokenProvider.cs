@@ -8,7 +8,7 @@ using SGE.Aplicacion.Comun;
 namespace SGE.Infraestructura.Seguridad;
 
 // Creación y firma de tokens de autenticación bajo el estándar JSON Web Token (JWT).
-public class JwtService(JwtSettings settings) : IJwtService
+public class JwtTokenProvider(JwtSettings settings) : ITokenProvider
 {
     public string GenerarToken(Guid userId)
     {
