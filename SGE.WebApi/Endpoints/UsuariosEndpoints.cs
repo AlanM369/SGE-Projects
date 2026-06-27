@@ -78,7 +78,8 @@ public static class UsuariosEndpoints
             ListarUsuariosUseCase useCase) =>
         {
             var idAdmin = ObtenerUserIdDelToken(user);
-            var usuarios = useCase.Ejecutar(idAdmin);
+            var request = new ListarUsuariosRequest(idAdmin);
+            var usuarios = useCase.Ejecutar(request);
             return Results.Ok(usuarios);
         })
         .RequireAuthorization()
