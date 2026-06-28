@@ -10,8 +10,8 @@
 dotnet run --project SGE.WebApi
 ```
 
-La API estará disponible en: `http://localhost:5000`  
-La documentación interactiva (Scalar) estará en: `http://localhost:5000/scalar/v1`
+La API estará disponible en: `http://localhost:5190`  
+La documentación interactiva (Scalar) estará en: `http://localhost:5190/scalar`
 
 > **Nota:** La base de datos `SGE.sqlite` se crea automáticamente al primer arranque junto con el administrador semilla y los usuarios de prueba.
 
