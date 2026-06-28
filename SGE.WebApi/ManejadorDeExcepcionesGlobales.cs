@@ -18,6 +18,7 @@ public class ManejadorDeExcepcionesGlobales : IExceptionHandler
         // Evaluación del tipo de excepción capturada para determinar el código de estado HTTP y el título correspondientes
         var (statusCode, titulo) = exception switch
         {
+            AutenticacionException       => (StatusCodes.Status401Unauthorized, "No autenticado"),
             AutorizacionException        => (StatusCodes.Status403Forbidden,          "Acceso denegado"),
             EntidadNoEncontradaException => (StatusCodes.Status404NotFound,           "Recurso no encontrado"),
             EntidadDuplicadaException    => (StatusCodes.Status400BadRequest,         "Recurso duplicado"),

@@ -8,11 +8,11 @@ public class LoginUseCase(IUsuarioRepository repositorio, IHashService hashServi
     {
         // 1. Buscamos el usuario por correo
         var usuario = repositorio.ObtenerPorCorreo(request.CorreoElectronico)
-            ?? throw new AutorizacionException("Credenciales inválidas.");
+            ?? throw new AutenticacionException("Credenciales inválidas.");
 
         // 2. Verificamos la contraseña comparando hashes
         if (!hashService.Verificar(request.Contrasena, usuario.ContrasenaHash))
-            throw new AutorizacionException("Credenciales inválidas.");
+            throw new AutenticacionException("Credenciales inválidas.");
 
         // 3. Generamos el token JWT
         var token = jwtService.GenerarToken(usuario.Id);
