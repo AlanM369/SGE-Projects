@@ -111,5 +111,5 @@ if (app.Environment.IsDevelopment())
 }
 
 // -- FASE 5: ARRANQUE DEL SERVIDOR KESTREL --
-
+app.MapGet("/", () => Results.Redirect("/scalar/v1"));
 app.Run();
